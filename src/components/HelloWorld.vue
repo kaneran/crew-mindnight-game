@@ -8,7 +8,12 @@ export default defineComponent({
   data:() => {
     return {
       test: "Iam test",
-      showButton: true
+      showButton: true,
+      players: [
+        {name: "Kane", role: "Agent"},
+        {name: "Speedy", role: "Hacker"},
+        {name: "ShadowBeatz", role: "Agent"},
+      ]
     }
   },
   methods: {
@@ -33,6 +38,10 @@ export default defineComponent({
     <span v-if="showButton">Update</span>
     <span v-else>Undo</span>
     </button>
+
+    <ul>
+      <li v-for="player in players" :key="player.name">{{ player.name }} - {{ player.role }}</li>
+    </ul>
   </div>
 </template>
 
