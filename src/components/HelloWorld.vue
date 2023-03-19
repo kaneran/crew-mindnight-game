@@ -38,9 +38,10 @@ export default defineComponent({
     <span v-if="showButton">Update</span>
     <span v-else>Undo</span>
     </button>
-
     <ul>
-      <li v-for="player in players" :key="player.name">{{ player.name }} - {{ player.role }}</li>
+      <li v-for="player in players" :key="player.name">{{ player.name }} - {{ player.role }}
+        <img src="../assets/character.jpg" :alt="player.name" :class="{left : true}"/>
+      </li>
     </ul>
   </div>
 </template>
@@ -63,4 +64,10 @@ li {
 
 a {
   color: #42b983;
-}</style>
+}
+
+li img.left{
+  transform: scaleX(-1);
+}
+</style>
+
