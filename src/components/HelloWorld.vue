@@ -21,6 +21,11 @@ export default defineComponent({
       this.test = this.showButton ? "Updated the message!" : "Iam test"
       this.showButton = !this.showButton
     }
+  },
+  computed:{
+    numberOfPlayers(){
+      return this.players.length
+    }
   }
 })
 
@@ -38,6 +43,7 @@ export default defineComponent({
     <span v-if="showButton">Update</span>
     <span v-else>Undo</span>
     </button>
+    <h2>{{ numberOfPlayers }} players in the lobby</h2>
     <ul>
       <li v-for="player in players" :key="player.name">{{ player.name }} - {{ player.role }}
         <img src="../assets/character.jpg" :alt="player.name" :class="{left : true}"/>
