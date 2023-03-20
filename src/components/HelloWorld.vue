@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
-
+/* eslint-disable */
 export default defineComponent({
   props: {
     msg: String
@@ -20,6 +20,8 @@ export default defineComponent({
     updateMsg() {
       this.test = this.showButton ? "Updated the message!" : "Iam test"
       this.showButton = !this.showButton
+      const header : HTMLHeadingElement = this.$refs.test
+      header.classList.add('success')
     }
   },
   computed:{
@@ -33,7 +35,7 @@ export default defineComponent({
 
 <template>
   <div class="hello">
-    <h1>{{ test }}</h1>
+    <h1 ref="test">{{ test }}</h1>
     <p>
       For a guide and recipes on how to configure / customize this project,<br>
       check out the
@@ -74,6 +76,10 @@ a {
 
 li img.left{
   transform: scaleX(-1);
+}
+
+.success{
+  color: #42b983;
 }
 </style>
 
