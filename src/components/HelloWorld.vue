@@ -20,7 +20,7 @@ export default defineComponent({
     updateMsg() {
       this.test = this.showButton ? "Updated the message!" : "Iam test"
       this.showButton = !this.showButton
-      const header : HTMLHeadingElement = this.$refs.test
+      const header : any = this.$refs.test
       header.classList.add('success')
     }
   },
