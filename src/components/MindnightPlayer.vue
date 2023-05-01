@@ -17,3 +17,19 @@ export default defineComponent({
         <p>{{ playerName }}</p>
     </div>
 </template>
+
+<style scoped>
+img{
+  width:60px;
+}
+
+img.left{
+  transform: scaleX(-1);
+}
+
+div{
+  min-width: 35%;
+  border: 5px solid green;
+  flex-grow: 1;
+}
+</style>

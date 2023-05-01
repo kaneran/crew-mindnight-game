@@ -17,3 +17,9 @@ export default class GameNodes extends Vue {}
         <GameNode playerCount="3" :state="{NumberOfHackersDetected: 2, Result: 'Secure'}"/>
     </div>
 </template>
+
+<style scoped>
+div{
+  border: 5px solid purple;
+}
+</style>

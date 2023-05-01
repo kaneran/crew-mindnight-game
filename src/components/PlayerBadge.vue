@@ -16,3 +16,9 @@ export default defineComponent({
         <p>{{ role }}</p>
     </div>
 </template>
+
+<style scoped>
+div{
+  border: 5px solid blue;
+}
+</style>
