@@ -1,10 +1,14 @@
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
 import MindnightPlayer from './MindnightPlayer.vue';
+import TeamProposition from './TeamProposition.vue';
+import GameMission from './GameMission.vue';
 
 @Options({
   components: {
-    MindnightPlayer
+    MindnightPlayer,
+    TeamProposition,
+    GameMission
   },
 })
 export default class PlayerRoom extends Vue {}
@@ -14,6 +18,8 @@ export default class PlayerRoom extends Vue {}
     <div>
         Player Room
         <p>Where to populate the players</p>
-        <MindnightPlayer name="Speedy" imagePosition="left"/>
+        <GameMission role="Agent" objective="SECURE 3 NODES"/>
+        <MindnightPlayer playerName="Speedy" imagePosition="left"/>
+        <TeamProposition playerName="Speedy" :participants="['Speedy','ShadowBeatz']"/>
     </div>
 </template>

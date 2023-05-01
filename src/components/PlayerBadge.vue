@@ -5,15 +5,14 @@ import { defineComponent } from 'vue';
 export default defineComponent({
   props: {
     playerName: String,
-    imagePosition: String
+    role: String
   }
 })
-
 </script>
 
 <template>
     <div>
-        <img src="../assets/character.jpg" :alt="playerName" :class="{left : imagePosition === 'left'}"/>
         <p>{{ playerName }}</p>
+        <p>{{ role }}</p>
     </div>
 </template>

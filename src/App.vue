@@ -1,10 +1,8 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
-  <GameNode/>
+  <PlayerBadge playerName="Speedy" role="Agent"/>
   <PlayerRoom/>
   <GameNodes/>
-  <GameMission role="Agent" objective="SECURE 3 NODES"/>
+  <!-- <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/> -->
 </template>
 
 <script lang="ts">
@@ -14,6 +12,7 @@ import GameNode from './components/GameNode.vue';
 import PlayerRoom from './components/PlayerRoom.vue';
 import GameNodes from './components/GameNodes.vue';
 import GameMission from './components/GameMission.vue';
+import PlayerBadge from './components/PlayerBadge.vue';
 
 @Options({
   components: {
@@ -21,7 +20,8 @@ import GameMission from './components/GameMission.vue';
     GameNode,
     PlayerRoom,
     GameNodes,
-    GameMission
+    GameMission,
+    PlayerBadge
   },
 })
 export default class App extends Vue {}
