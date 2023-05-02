@@ -1,30 +1,46 @@
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
 import MindnightPlayer from './MindnightPlayer.vue';
 import TeamProposition from './TeamProposition.vue';
 import GameMission from './GameMission.vue';
+import { defineComponent } from 'vue';
 
-@Options({
+
+export default defineComponent({
   components: {
     MindnightPlayer,
     TeamProposition,
     GameMission
   },
+  methods:{
+    ChangeProposition(playerName: string){
+      //If selected player has already been selected, remove them from proposition
+      if(this.participants.includes(playerName)){
+        this.participants = this.participants.filter((p) => p !== playerName)
+        //If there is space for another participant to part of the proposition then add them
+      } else if(this.participants.length !== 2){
+        this.participants.push(playerName)
+      }
+    }
+  },
+  data(){
+    return{
+      participants:['Speedy','ShadowBeatz']
+    }
+  }
 })
-export default class PlayerRoom extends Vue {}
 </script>
 
 <template>
     <div id="roomDiv">
         <GameMission role="Agent" objective="SECURE 3 NODES"/>
         <div id="playersDiv">
-        <MindnightPlayer playerName="Speedy" imagePosition="left"/>
-        <MindnightPlayer playerName="Kane" imagePosition="right"/>
-        <MindnightPlayer playerName="NobodyEpic" imagePosition="left"/>
-        <MindnightPlayer playerName="ShadowBeatz" imagePosition="left"/>
-        <MindnightPlayer playerName="SideArms" imagePosition="left"/>
+        <MindnightPlayer playerName="Speedy" imagePosition="left" @changeProposition="ChangeProposition($event)" />
+        <MindnightPlayer playerName="Kane" imagePosition="right" @changeProposition="ChangeProposition($event)"/>
+        <MindnightPlayer playerName="NobodyEpic" imagePosition="left" @changeProposition="ChangeProposition($event)"/>
+        <MindnightPlayer playerName="ShadowBeatz" imagePosition="left" @changeProposition="ChangeProposition($event)"/>
+        <MindnightPlayer playerName="SideArms" imagePosition="left" @changeProposition="ChangeProposition($event)"/>
       </div>
-        <TeamProposition playerName="Speedy" :participants="['Speedy','ShadowBeatz']"/>
+        <TeamProposition playerName="Speedy" :participants="participants"/>
     </div>
 </template>
 

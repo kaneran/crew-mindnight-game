@@ -6,13 +6,18 @@ export default defineComponent({
   props: {
     playerName: String,
     imagePosition: String
+  },
+  methods: {
+    passPlayerName(){
+      this.$emit('changeProposition', this.playerName)
+    }
   }
 })
 
 </script>
 
 <template>
-    <div>
+    <div @click="passPlayerName">
         <img src="../assets/character.jpg" :alt="playerName" :class="{left : imagePosition === 'left'}"/>
         <p>{{ playerName }}</p>
     </div>
