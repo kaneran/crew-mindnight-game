@@ -3,6 +3,7 @@ import MindnightPlayer from './MindnightPlayer.vue';
 import TeamProposition from './TeamProposition.vue';
 import GameMission from './GameMission.vue';
 import { defineComponent } from 'vue';
+import axios from 'axios';
 
 
 export default defineComponent({
@@ -10,6 +11,9 @@ export default defineComponent({
     MindnightPlayer,
     TeamProposition,
     GameMission
+  },
+  mounted() {
+      axios.get("https://localhost:7240/Game?playerName=test").then((data) => console.log(data))
   },
   methods:{
     ChangeProposition(playerName: string){
