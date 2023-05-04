@@ -4,6 +4,7 @@ import TeamProposition from './TeamProposition.vue';
 import GameMission from './GameMission.vue';
 import { defineComponent } from 'vue';
 import axios from 'axios';
+import Player from '@/types/Player';
 
 
 export default defineComponent({
@@ -13,7 +14,7 @@ export default defineComponent({
     GameMission
   },
   mounted() {
-      axios.get("https://localhost:7240/Game?playerName=test").then((data) => console.log(data))
+      axios.get("https://localhost:7240/Game?playerName=test").then((response) => this.players = response.data)
   },
   methods:{
     ChangeProposition(playerName: string){
@@ -28,7 +29,8 @@ export default defineComponent({
   },
   data(){
     return{
-      participants:['Speedy','ShadowBeatz']
+      participants:[] as string[],
+      players: [] as Player[]
     }
   }
 })
@@ -37,12 +39,13 @@ export default defineComponent({
 <template>
     <div id="roomDiv">
         <GameMission role="Agent" objective="SECURE 3 NODES"/>
-        <div id="playersDiv">
-        <MindnightPlayer playerName="Speedy" imagePosition="left" @changeProposition="ChangeProposition($event)" />
+        <div id="playersDiv" v-for="player in players" :key="player.id">
+          <MindnightPlayer :playerName="player.name" imagePosition="left" @changeProposition="ChangeProposition($event)" />
+        <!-- <MindnightPlayer playerName="Speedy" imagePosition="left" @changeProposition="ChangeProposition($event)" />
         <MindnightPlayer playerName="Kane" imagePosition="right" @changeProposition="ChangeProposition($event)"/>
         <MindnightPlayer playerName="NobodyEpic" imagePosition="left" @changeProposition="ChangeProposition($event)"/>
         <MindnightPlayer playerName="ShadowBeatz" imagePosition="left" @changeProposition="ChangeProposition($event)"/>
-        <MindnightPlayer playerName="SideArms" imagePosition="left" @changeProposition="ChangeProposition($event)"/>
+        <MindnightPlayer playerName="SideArms" imagePosition="left" @changeProposition="ChangeProposition($event)"/> -->
       </div>
         <TeamProposition playerName="Speedy" :participants="participants"/>
     </div>
