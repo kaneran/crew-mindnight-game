@@ -48,7 +48,7 @@ export default defineComponent({
     <h2>{{ numberOfPlayers }} players in the lobby</h2>
     <ul>
       <li v-for="player in players" :key="player.name">{{ player.name }} - {{ player.role }}
-        <img src="../assets/character.jpg" :alt="player.name" :class="{left : true}"/>
+        <!-- <img src="../assets/character.jpg" :alt="player.name" :class="{left : true}"/> -->
       </li>
     </ul>
   </div>

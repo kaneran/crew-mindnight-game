@@ -18,7 +18,7 @@ export default defineComponent({
     return {
       topAndBottomIds: [0, 1, 4, 5]
     }
-  },
+  }
 })
 
 </script>
@@ -26,8 +26,8 @@ export default defineComponent({
 <template>
   <div @click="passPlayerName"
     :class="{ topOrBottom: player?.id && topAndBottomIds.includes(player.id) || player?.id == 0 }">
-    <img src="../assets/character.jpg" :alt="player?.name" :class="{ left: imagePosition === 'left' }" />
-    <p>{{ player?.name }}</p>
+    <img :src="require(`@/assets/${player?.playerConfig.playerCharacterFileName}.png`)" :alt="player?.name" :class="{ left: imagePosition === 'left' }" />
+    <p :style="{ color: player?.playerConfig.playerTextColour}">{{ player?.name }}</p>
   </div>
 </template>
 
