@@ -14,23 +14,24 @@ export default defineComponent({
     GameMission
   },
   mounted() {
-    axios.get("https://localhost:7240/Game?playerName=Kaneran").then((response) => this.players = response.data)
+    axios.get(`https://localhost:7240/Game?playerName=Kaneran`).then((response) => this.players = response.data)
   },
   methods: {
-    ChangeProposition(playerName: string) {
+    ChangeProposition(player: Player) {
       //If selected player has already been selected, remove them from proposition
-      if (this.participants.includes(playerName)) {
-        this.participants = this.participants.filter((p) => p !== playerName)
+      if (this.participants.includes(player)) {
+        this.participants = this.participants.filter((p) => p.name !== player.name)
         //If there is space for another participant to part of the proposition then add them
-      } else if (this.participants.length !== 2) {
-        this.participants.push(playerName)
+      } else if (this.participants.length !== 3) {
+        this.participants.push(player)
       }
     }
   },
   data() {
     return {
-      participants: [] as string[],
-      players: [] as Player[]
+      participants: [] as Player[],
+      players: [] as Player[],
+      playerName: "Kaneran"
     }
   }
 })
@@ -53,7 +54,7 @@ export default defineComponent({
           @changeProposition="ChangeProposition($event)" />
       </div>
     </div>
-    <TeamProposition playerName="Speedy" :participants="participants" />
+    <TeamProposition :player="players.find(p => p.name = playerName)" :participants="participants" />
   </div>
 </template>
 

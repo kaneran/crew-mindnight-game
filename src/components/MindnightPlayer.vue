@@ -11,7 +11,7 @@ export default defineComponent({
   },
   methods: {
     passPlayerName() {
-      this.$emit('changeProposition', this.player?.name)
+      this.$emit('changeProposition', this.player)
     }
   },
   data() {
@@ -26,8 +26,8 @@ export default defineComponent({
 <template>
   <div @click="passPlayerName"
     :class="{ topOrBottom: player?.id && topAndBottomIds.includes(player.id) || player?.id == 0 }">
-    <img :src="require(`@/assets/${player?.playerConfig.playerCharacterFileName}.png`)" :alt="player?.name" :class="{ left: imagePosition === 'left' }" />
-    <p :style="{ color: player?.playerConfig.playerTextColour}">{{ player?.name }}</p>
+    <img :src="require(`@/assets/${player?.playerConfig.playerCharacterFileName}.png`)" :alt="player?.name" :class="{ left: player?.id % 2  == 0 || player?.id == 0 }" />
+    <p :style="{ color: player?.playerConfig.playerTextColour}">{{ player?.playerConfig.playerName }}</p>
   </div>
 </template>
 
