@@ -14,22 +14,22 @@ export default defineComponent({
     GameMission
   },
   mounted() {
-      axios.get("https://localhost:7240/Game?playerName=test").then((response) => this.players = response.data)
+    axios.get("https://localhost:7240/Game?playerName=Kaneran").then((response) => this.players = response.data)
   },
-  methods:{
-    ChangeProposition(playerName: string){
+  methods: {
+    ChangeProposition(playerName: string) {
       //If selected player has already been selected, remove them from proposition
-      if(this.participants.includes(playerName)){
+      if (this.participants.includes(playerName)) {
         this.participants = this.participants.filter((p) => p !== playerName)
         //If there is space for another participant to part of the proposition then add them
-      } else if(this.participants.length !== 2){
+      } else if (this.participants.length !== 2) {
         this.participants.push(playerName)
       }
     }
   },
-  data(){
-    return{
-      participants:[] as string[],
+  data() {
+    return {
+      participants: [] as string[],
       players: [] as Player[]
     }
   }
@@ -37,28 +37,43 @@ export default defineComponent({
 </script>
 
 <template>
-    <div id="roomDiv">
-        <GameMission role="Agent" objective="SECURE 3 NODES"/>
-        <div id="playersDiv" v-for="player in players" :key="player.id">
-          <MindnightPlayer :playerName="player.name" imagePosition="left" @changeProposition="ChangeProposition($event)" />
-        <!-- <MindnightPlayer playerName="Speedy" imagePosition="left" @changeProposition="ChangeProposition($event)" />
-        <MindnightPlayer playerName="Kane" imagePosition="right" @changeProposition="ChangeProposition($event)"/>
-        <MindnightPlayer playerName="NobodyEpic" imagePosition="left" @changeProposition="ChangeProposition($event)"/>
-        <MindnightPlayer playerName="ShadowBeatz" imagePosition="left" @changeProposition="ChangeProposition($event)"/>
-        <MindnightPlayer playerName="SideArms" imagePosition="left" @changeProposition="ChangeProposition($event)"/> -->
+  <div id="roomDiv">
+    <GameMission role="Agent" objective="SECURE 3 NODES" />
+    <div id="playersDiv">
+      <div>
+        <MindnightPlayer v-for="player in players.slice(0, 2)" :key="player.id" :player="player" imagePosition="left"
+          @changeProposition="ChangeProposition($event)" />
       </div>
-        <TeamProposition playerName="Speedy" :participants="participants"/>
+      <div class="middle">
+        <MindnightPlayer v-for="player in players.slice(2, 4)" :key="player.id" :player="player" imagePosition="left"
+          @changeProposition="ChangeProposition($event)" />
+      </div>
+      <div>
+        <MindnightPlayer v-for="player in players.slice(4, 6)" :key="player.id" :player="player" imagePosition="left"
+          @changeProposition="ChangeProposition($event)" />
+      </div>
     </div>
+    <TeamProposition playerName="Speedy" :participants="participants" />
+  </div>
 </template>
 
 <style scoped>
-#roomDiv{
+#roomDiv {
   border: 5px solid red;
   flex-grow: 5;
   min-height: 90vh;
 }
-#playersDiv{
+
+#playersDiv {
   display: flex;
   flex-wrap: wrap;
+  flex-direction: column;
 }
-</style>
+
+#playersDiv>div {
+  display: flex;
+}
+
+#playersDiv>div.middle {
+  justify-content: space-between;
+}</style>
