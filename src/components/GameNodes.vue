@@ -1,13 +1,16 @@
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
+import Node from '@/types/Node';
 import GameNode from './GameNode.vue';
+import { PropType, defineComponent } from 'vue';
 
-@Options({
+export default defineComponent({
+  props: {
+    nodes: [] as PropType<Node[]>
+  },
   components: {
     GameNode
   },
 })
-export default class GameNodes extends Vue {}
 </script>
 
 <template>

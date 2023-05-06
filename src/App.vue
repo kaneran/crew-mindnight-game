@@ -1,29 +1,35 @@
 <template>
   <PlayerBadge playerName="Speedy" role="Agent"/>
-  <PlayerRoom/>
-  <GameNodes/>
+  <PlayerRoom :gameSetup="gameSetup"/>
+  <GameNodes :nodes="gameSetup.nodes"/>
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
-import HelloWorld from './components/HelloWorld.vue';
-import GameNode from './components/GameNode.vue';
 import PlayerRoom from './components/PlayerRoom.vue';
 import GameNodes from './components/GameNodes.vue';
-import GameMission from './components/GameMission.vue';
 import PlayerBadge from './components/PlayerBadge.vue';
+import { defineComponent } from 'vue';
+import axios from 'axios';
+import GameSetup from './types/GameSetup';
 
-@Options({
+export default defineComponent({
   components: {
-    HelloWorld,
-    GameNode,
     PlayerRoom,
     GameNodes,
-    GameMission,
     PlayerBadge
   },
+  mounted() {
+    axios.get(`https://localhost:7240/Game?playerName=Kaneran`).then((response) => this.gameSetup = response.data)
+  },
+  data() {
+    return {
+      gameSetup: {} as GameSetup,
+      playerName: "Kaneran",
+      currentNode: 1
+    }
+  }
 })
-export default class App extends Vue {}
+
 </script>
 
 <style>

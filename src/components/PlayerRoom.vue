@@ -2,22 +2,19 @@
 import MindnightPlayer from './MindnightPlayer.vue';
 import TeamProposition from './TeamProposition.vue';
 import GameMission from './GameMission.vue';
-import { defineComponent } from 'vue';
-import axios from 'axios';
+import { PropType, defineComponent } from 'vue';
 import Player from '@/types/Player';
 import GameSetup from '@/types/GameSetup';
 
 
 export default defineComponent({
+  props:{
+    gameSetup: {} as PropType<GameSetup>
+  },
   components: {
     MindnightPlayer,
     TeamProposition,
     GameMission
-  },
-  mounted() {
-    axios.get(`https://localhost:7240/Game?playerName=Kaneran`).then((response) => {
-      this.gameSetup = response.data;
-    })
   },
   methods: {
     ChangeProposition(player: Player) {
@@ -33,7 +30,6 @@ export default defineComponent({
   data() {
     return {
       participants: [] as Player[],
-      gameSetup: {} as GameSetup,
       playerName: "Kaneran",
       currentNode: 1
     }
