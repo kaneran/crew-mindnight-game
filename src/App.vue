@@ -42,5 +42,8 @@ export default defineComponent({
   color: #2c3e50;
   display: flex;
   width:auto;
+  background-image: url('./assets/stage.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 </style>
