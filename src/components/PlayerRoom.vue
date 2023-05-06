@@ -5,6 +5,7 @@ import GameMission from './GameMission.vue';
 import { defineComponent } from 'vue';
 import axios from 'axios';
 import Player from '@/types/Player';
+import GameSetup from '@/types/GameSetup';
 
 
 export default defineComponent({
@@ -14,7 +15,9 @@ export default defineComponent({
     GameMission
   },
   mounted() {
-    axios.get(`https://localhost:7240/Game?playerName=Kaneran`).then((response) => this.players = response.data)
+    axios.get(`https://localhost:7240/Game?playerName=Kaneran`).then((response) => {
+      this.gameSetup = response.data;
+    })
   },
   methods: {
     ChangeProposition(player: Player) {
@@ -30,8 +33,9 @@ export default defineComponent({
   data() {
     return {
       participants: [] as Player[],
-      players: [] as Player[],
-      playerName: "Kaneran"
+      gameSetup: {} as GameSetup,
+      playerName: "Kaneran",
+      currentNode: 1
     }
   }
 })
@@ -40,21 +44,23 @@ export default defineComponent({
 <template>
   <div id="roomDiv">
     <GameMission role="Agent" objective="SECURE 3 NODES" />
+    <p>Node {{ currentNode }}</p>
+    <p id="selectPhase">Select Phase</p>
     <div id="playersDiv">
       <div>
-        <MindnightPlayer v-for="player in players.slice(0, 2)" :key="player.id" :player="player" imagePosition="left"
+        <MindnightPlayer v-for="player in gameSetup.players?.slice(0, 2)" :key="player.id" :player="player" imagePosition="left"
           @changeProposition="ChangeProposition($event)" />
       </div>
       <div class="middle">
-        <MindnightPlayer v-for="player in players.slice(2, 4)" :key="player.id" :player="player" imagePosition="left"
+        <MindnightPlayer v-for="player in gameSetup.players?.slice(2, 4)" :key="player.id" :player="player" imagePosition="left"
           @changeProposition="ChangeProposition($event)" />
       </div>
       <div>
-        <MindnightPlayer v-for="player in players.slice(4, 6)" :key="player.id" :player="player" imagePosition="left"
+        <MindnightPlayer v-for="player in gameSetup.players?.slice(4, 6)" :key="player.id" :player="player" imagePosition="left"
           @changeProposition="ChangeProposition($event)" />
       </div>
     </div>
-    <TeamProposition :player="players.find(p => p.name = playerName)" :participants="participants" />
+    <TeamProposition :player="gameSetup.players?.find(p => p.name = playerName)" :participants="participants" />
   </div>
 </template>
 
@@ -77,4 +83,9 @@ export default defineComponent({
 
 #playersDiv>div.middle {
   justify-content: space-between;
-}</style>
+}
+
+#selectPhase {
+  font-size: large;
+}
+</style>
