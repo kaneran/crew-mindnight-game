@@ -1,4 +1,5 @@
 <script lang="ts">
+import Node from '@/types/Node';
 import Player from '@/types/Player';
 import { defineComponent } from 'vue';
 import type { PropType } from 'vue';
@@ -7,7 +8,9 @@ import type { PropType } from 'vue';
 export default defineComponent({
   props: {
     player: {} as PropType<Player>,
-    participants: Array as PropType<Player[]>
+    participants: Array as PropType<Player[]>,
+    nodes: Array as PropType<Node[]>,
+    currentNode: Number
   }
 })
 
@@ -19,7 +22,7 @@ export default defineComponent({
     <p :style="{color: player?.playerConfig.playerTextColour}">{{ player?.name }}</p>
     <p>&nbsp;is proposing</p>
   </div>
-    <p>{{ participants?.length }}/3</p>
+    <p>{{ participants?.length }}/{{ nodes?.find(n => n.id == currentNode)?.numberOfParticipantsRequired }}</p>
     <div id="participantsList">
       <div v-for="(participant, index) in participants">
         <p :style="{color: participant.playerConfig.playerTextColour}">{{ participant.name }}</p>

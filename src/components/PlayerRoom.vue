@@ -22,7 +22,7 @@ export default defineComponent({
       if (this.participants.includes(player)) {
         this.participants = this.participants.filter((p) => p.name !== player.name)
         //If there is space for another participant to part of the proposition then add them
-      } else if (this.participants.length !== 3) {
+      } else if (this.participants.length !== this.gameSetup?.nodes?.find(n => n.id == this.currentNode)?.numberOfParticipantsRequired) {
         this.participants.push(player)
       }
     }
@@ -56,7 +56,7 @@ export default defineComponent({
           @changeProposition="ChangeProposition($event)" />
       </div>
     </div>
-    <TeamProposition :player="gameSetup.players?.find(p => p.name = playerName)" :participants="participants" />
+    <TeamProposition :player="gameSetup.players?.find(p => p.name = playerName)" :participants="participants" :nodes="gameSetup?.nodes" :currentNode="currentNode" />
   </div>
 </template>
 
