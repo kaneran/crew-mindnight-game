@@ -1,7 +1,8 @@
+import Outcome from "./Outcome";
 import Player from "./Player";
 
 interface GameProgress{
-    audit: NodeOutcome[],
+    audit: Outcome[],
     node: number,
     participants: Player[]
 }

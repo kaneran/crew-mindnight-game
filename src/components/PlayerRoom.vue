@@ -9,7 +9,7 @@ import GameProgress from '@/types/GameProgress';
 
 
 export default defineComponent({
-  props:{
+  props: {
     gameSetup: {} as PropType<GameSetup>
   },
   components: {
@@ -27,7 +27,7 @@ export default defineComponent({
         this.participants.push(player)
       }
     },
-    PerformMaintenance(gameProgress : GameProgress){
+    PerformMaintenance(gameProgress: GameProgress) {
       this.$emit('performMaintenance', gameProgress)
     }
   },
@@ -48,19 +48,24 @@ export default defineComponent({
     <p id="selectPhase">Select Phase</p>
     <div id="playersDiv">
       <div>
-        <MindnightPlayer v-for="player in gameSetup.players?.slice(0, 2)" :key="player.id" :player="player" imagePosition="left"
-          @changeProposition="ChangeProposition($event)" />
+        <MindnightPlayer v-for="player in gameSetup.players?.slice(0, 2)" :key="player.id" :player="player"
+          imagePosition="left" @changeProposition="ChangeProposition($event)" />
       </div>
       <div class="middle">
-        <MindnightPlayer v-for="player in gameSetup.players?.slice(2, 4)" :key="player.id" :player="player" imagePosition="left"
-          @changeProposition="ChangeProposition($event)" />
+        <MindnightPlayer v-for="player in gameSetup.players?.slice(2, 3)" :key="player.id" :player="player"
+          imagePosition="left" @changeProposition="ChangeProposition($event)" />
+        <TeamProposition :player="gameSetup.players?.find(p => p.playerConfig.playerName = playerName)"
+          :participants="participants" :nodes="gameSetup?.nodes" :currentNode="currentNode"
+          @performMaintenance="PerformMaintenance($event)" />
+        <MindnightPlayer v-for="player in gameSetup.players?.slice(3, 4)" :key="player.id" :player="player"
+          imagePosition="left" @changeProposition="ChangeProposition($event)" />
       </div>
       <div>
-        <MindnightPlayer v-for="player in gameSetup.players?.slice(4, 6)" :key="player.id" :player="player" imagePosition="left"
-          @changeProposition="ChangeProposition($event)" />
+        <MindnightPlayer v-for="player in gameSetup.players?.slice(4, 6)" :key="player.id" :player="player"
+          imagePosition="left" @changeProposition="ChangeProposition($event)" />
       </div>
     </div>
-    <TeamProposition :player="gameSetup.players?.find(p => p.playerConfig.playerName = playerName)" :participants="participants" :nodes="gameSetup?.nodes" :currentNode="currentNode" @performMaintenance="PerformMaintenance($event)" />
+    <!-- <TeamProposition :player="gameSetup.players?.find(p => p.playerConfig.playerName = playerName)" :participants="participants" :nodes="gameSetup?.nodes" :currentNode="currentNode" @performMaintenance="PerformMaintenance($event)" /> -->
   </div>
 </template>
 

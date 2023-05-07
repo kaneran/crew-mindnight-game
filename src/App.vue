@@ -6,11 +6,11 @@
   </div>
   <div id="enterNameDiv" v-else>
     <h1 style="color: white">
-      Before you enter the room, enter your name!
+      Wait! You haven't told us your your name!
     </h1>
     <div id="enterName">
     <input type="text" id="name" :value="value" @input="OnInputChange">
-    <button class="mindnightButton" @click="DisplayGameRoom">Enter</button>
+    <button class="mindnightButton" @click="DisplayGameRoom">Submit</button>
   </div>
   </div>
 </template>
@@ -23,6 +23,7 @@ import { defineComponent } from 'vue';
 import axios from 'axios';
 import GameSetup from './types/GameSetup';
 import GameProgress from './types/GameProgress';
+import Outcome from './types/Outcome';
 
 export default defineComponent({
   components: {
@@ -38,12 +39,13 @@ export default defineComponent({
       playerName: "Kaneran",
       currentNode: 1,
       playerEnteredRoom: false,
-      value: ""
+      value: "",
+      gameProgress: {audit: [] as Outcome[]} as GameProgress
     }
   },
   methods: {
-    PerformMaintenance(gameProgress: GameProgress) {
-      axios.post('https://localhost:7240/maintenance', gameProgress)
+    PerformMaintenance(progress: GameProgress) {
+      axios.post('https://localhost:7240/maintenance', progress).then((response) => this.gameProgress.audit?.push(response.data))
     },
     DisplayGameRoom() {
       axios.get(`https://localhost:7240/Game?playerName=${this.value}`).then((response) => this.gameSetup = response.data)
