@@ -5,6 +5,7 @@ import GameMission from './GameMission.vue';
 import { PropType, defineComponent } from 'vue';
 import Player from '@/types/Player';
 import GameSetup from '@/types/GameSetup';
+import GameProgress from '@/types/GameProgress';
 
 
 export default defineComponent({
@@ -25,6 +26,9 @@ export default defineComponent({
       } else if (this.participants.length !== this.gameSetup?.nodes?.find(n => n.id == this.currentNode)?.numberOfParticipantsRequired) {
         this.participants.push(player)
       }
+    },
+    PerformMaintenance(gameProgress : GameProgress){
+      this.$emit('performMaintenance', gameProgress)
     }
   },
   data() {
@@ -56,7 +60,7 @@ export default defineComponent({
           @changeProposition="ChangeProposition($event)" />
       </div>
     </div>
-    <TeamProposition :player="gameSetup.players?.find(p => p.name = playerName)" :participants="participants" :nodes="gameSetup?.nodes" :currentNode="currentNode" />
+    <TeamProposition :player="gameSetup.players?.find(p => p.playerConfig.playerName = playerName)" :participants="participants" :nodes="gameSetup?.nodes" :currentNode="currentNode" @performMaintenance="PerformMaintenance($event)" />
   </div>
 </template>
 

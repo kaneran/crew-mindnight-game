@@ -1,6 +1,6 @@
 <template>
   <PlayerBadge playerName="Speedy" role="Agent"/>
-  <PlayerRoom :gameSetup="gameSetup"/>
+  <PlayerRoom :gameSetup="gameSetup" @performMaintenance="PerformMaintenance($event)"/>
   <GameNodes :nodes="gameSetup.nodes"/>
 </template>
 
@@ -11,6 +11,7 @@ import PlayerBadge from './components/PlayerBadge.vue';
 import { defineComponent } from 'vue';
 import axios from 'axios';
 import GameSetup from './types/GameSetup';
+import GameProgress from './types/GameProgress';
 
 export default defineComponent({
   components: {
@@ -26,6 +27,11 @@ export default defineComponent({
       gameSetup: {} as GameSetup,
       playerName: "Kaneran",
       currentNode: 1
+    }
+  },
+  methods: {
+    PerformMaintenance(gameProgress: GameProgress) {
+      axios.post('https://localhost:7240/maintenance', gameProgress)
     }
   }
 })

@@ -1,6 +1,7 @@
 <script lang="ts">
 import Node from '@/types/Node';
 import Player from '@/types/Player';
+import GameProgress from '@/types/GameProgress';
 import { defineComponent } from 'vue';
 import type { PropType } from 'vue';
 
@@ -11,6 +12,11 @@ export default defineComponent({
     participants: Array as PropType<Player[]>,
     nodes: Array as PropType<Node[]>,
     currentNode: Number
+  },
+  methods: {
+    PerformMaintenance(){
+      this.$emit('performMaintenance', {participants:this.participants, node: this.currentNode, audit: []} as GameProgress)
+    }
   }
 })
 
@@ -29,7 +35,7 @@ export default defineComponent({
         <p v-if="index !== participants?.length - 1"> , </p>
       </div>
     </div>
-    <button id="proposeButton">Propose</button>
+    <button id="proposeButton" @click="PerformMaintenance">Propose</button>
   </div>
 </template>
 
