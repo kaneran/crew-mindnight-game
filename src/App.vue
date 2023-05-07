@@ -21,6 +21,9 @@ export default defineComponent({
   },
   mounted() {
     axios.get(`https://localhost:7240/Game?playerName=Kaneran`).then((response) => this.gameSetup = response.data)
+    var audio = new Audio(require('../src/assets/sounds/ingametheme.mp3'))
+    audio.loop = true;
+    audio.play()
   },
   data() {
     return {
@@ -48,7 +51,7 @@ export default defineComponent({
   color: #2c3e50;
   display: flex;
   width:auto;
-  background-image: url('./assets/stage.jpg');
+  background-image: url('./assets/images/stage.jpg');
   background-size: cover;
   background-repeat: no-repeat;
 }
