@@ -15,6 +15,8 @@ export default defineComponent({
   },
   methods: {
     PerformMaintenance(){
+      var acceptedAudio = new Audio(require('../assets/sounds/accepted.mp3'))
+      acceptedAudio.play()
       this.$emit('performMaintenance', {participants:this.participants, node: this.currentNode, audit: []} as GameProgress)
     }
   }
@@ -35,7 +37,7 @@ export default defineComponent({
         <p v-if="index !== participants?.length - 1"> , </p>
       </div>
     </div>
-    <button id="proposeButton" @click="PerformMaintenance">Propose</button>
+    <button id="proposeButton" class="mindnightButton" @click="PerformMaintenance">Propose</button>
   </div>
 </template>
 
@@ -43,11 +45,6 @@ export default defineComponent({
 #participantsList{
   display:flex;
   justify-content: center;
-}
-
-#proposeButton{
-  padding: 10px 60px 10px 60px;
-  font-family: "Mouse", Helvetica, Arial, sans-serif;
 }
 
 #participantsList > div, #proposeButton, p{
