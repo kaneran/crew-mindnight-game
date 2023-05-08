@@ -11,13 +11,13 @@ export default defineComponent({
     player: {} as PropType<Player>,
     participants: Array as PropType<Player[]>,
     nodes: Array as PropType<Node[]>,
-    currentNode: Number
+    gameProgress: {} as PropType<GameProgress>
   },
   methods: {
     PerformMaintenance(){
       var acceptedAudio = new Audio(require('../assets/sounds/accepted.mp3'))
       acceptedAudio.play()
-      this.$emit('performMaintenance', {participants:this.participants, node: this.currentNode, audit: []} as GameProgress)
+      this.$emit('performMaintenance', {participants:this.participants, node: this.gameProgress?.node, audit: this.gameProgress?.audit} as GameProgress)
     }
   }
 })
@@ -30,7 +30,7 @@ export default defineComponent({
     <p :style="{color: player?.playerConfig.playerTextColour}">{{ player?.name }}</p>
     <p>&nbsp;is proposing</p>
   </div>
-    <p>{{ participants?.length }}/{{ nodes?.find(n => n.id == currentNode)?.numberOfParticipantsRequired }}</p>
+    <p>{{ participants?.length }}/{{ nodes?.find(n => n.id == gameProgress?.node)?.numberOfParticipantsRequired }}</p>
     <div id="participantsList">
       <div v-for="(participant, index) in participants">
         <p :style="{color: participant.playerConfig.playerTextColour}">{{ participant.name }}</p>

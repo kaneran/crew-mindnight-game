@@ -1,7 +1,7 @@
 <template>
   <div id="gameRoom" v-if="playerEnteredRoom">
     <PlayerBadge playerName="Speedy" role="Agent" />
-    <PlayerRoom :gameSetup="gameSetup" @performMaintenance="PerformMaintenance($event)" />
+    <PlayerRoom :gameSetup="gameSetup" :gameProgress="gameProgress" :maintenanceCompleted="maintenanceCompleted" :maintenceInProgress="maintenanceInProgress" @performMaintenance="PerformMaintenance($event)" />
     <GameNodes :nodes="gameSetup.nodes" />
   </div>
   <div id="enterNameDiv" v-else>
@@ -24,6 +24,7 @@ import axios from 'axios';
 import GameSetup from './types/GameSetup';
 import GameProgress from './types/GameProgress';
 import Outcome from './types/Outcome';
+import Player from './types/Player';
 
 export default defineComponent({
   components: {
@@ -40,12 +41,24 @@ export default defineComponent({
       currentNode: 1,
       playerEnteredRoom: false,
       value: "",
-      gameProgress: {audit: [] as Outcome[]} as GameProgress
+      gameProgress: {node: 1, audit: [] as Outcome[], participants: [] as Player[]} as GameProgress,
+      maintenanceInProgress: false,
+      maintenanceCompleted : false
     }
   },
   methods: {
     PerformMaintenance(progress: GameProgress) {
-      axios.post('https://localhost:7240/maintenance', progress).then((response) => this.gameProgress.audit?.push(response.data))
+      axios.post('https://localhost:7240/maintenance', progress).then((response) => {
+        this.gameProgress.audit?.push(response.data);
+        setTimeout(() => {
+          console.log("Play sound...")
+          console.log("Maintenance in progress...")
+          this.maintenanceInProgress = !this.maintenanceInProgress
+          this.maintenanceCompleted = !this.maintenanceCompleted
+          console.log(this.maintenanceInProgress)
+        },3000);
+        this.gameProgress.node++;
+      });
     },
     DisplayGameRoom() {
       axios.get(`https://localhost:7240/Game?playerName=${this.value}`).then((response) => this.gameSetup = response.data)

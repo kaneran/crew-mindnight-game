@@ -10,7 +10,10 @@ import GameProgress from '@/types/GameProgress';
 
 export default defineComponent({
   props: {
-    gameSetup: {} as PropType<GameSetup>
+    gameSetup: {} as PropType<GameSetup>,
+    gameProgress: {} as PropType<GameProgress>,
+    maintenanceCompleted: Boolean,
+    maintenanceInProgress: Boolean
   },
   components: {
     MindnightPlayer,
@@ -44,7 +47,7 @@ export default defineComponent({
 <template>
   <div id="roomDiv">
     <GameMission role="Agent" objective="SECURE 3 NODES" />
-    <p>Node {{ currentNode }}</p>
+    <p>Node {{ gameProgress?.node }}</p>
     <p id="selectPhase">Select Phase</p>
     <div id="playersDiv">
       <div>
@@ -54,8 +57,14 @@ export default defineComponent({
       <div class="middle">
         <MindnightPlayer v-for="player in gameSetup.players?.slice(2, 3)" :key="player.id" :player="player"
           imagePosition="left" @changeProposition="ChangeProposition($event)" />
-        <TeamProposition :player="gameSetup.players?.find(p => p.playerConfig.playerName = playerName)"
-          :participants="participants" :nodes="gameSetup?.nodes" :currentNode="currentNode"
+        <div v-if="maintenanceInProgress">NODE MAINTENANCE IN PROGRESS...
+        <p>Node team {{ participants.join(",") }}</p>
+        </div>
+        <div v-else-if="maintenanceCompleted">Node {{ currentNode }} Secured
+        <p>No hackers detected.</p>
+        </div>
+        <TeamProposition v-else :player="gameSetup.players?.find(p => p.playerConfig.playerName = playerName)"
+          :participants="participants" :nodes="gameSetup?.nodes" :gameProgress="gameProgress"
           @performMaintenance="PerformMaintenance($event)" />
         <MindnightPlayer v-for="player in gameSetup.players?.slice(3, 4)" :key="player.id" :player="player"
           imagePosition="left" @changeProposition="ChangeProposition($event)" />
@@ -65,7 +74,6 @@ export default defineComponent({
           imagePosition="left" @changeProposition="ChangeProposition($event)" />
       </div>
     </div>
-    <!-- <TeamProposition :player="gameSetup.players?.find(p => p.playerConfig.playerName = playerName)" :participants="participants" :nodes="gameSetup?.nodes" :currentNode="currentNode" @performMaintenance="PerformMaintenance($event)" /> -->
   </div>
 </template>
 
