@@ -1,8 +1,8 @@
 interface Outcome {
-    NumberOfHackersDetected: number,
-    Result: string,
-    Node: number,
-    Participants: string[]
+    numberOfHackersDetected: number,
+    result: string,
+    node: number,
+    participants: string[]
 }
 
 export default Outcome;

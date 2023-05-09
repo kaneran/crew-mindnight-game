@@ -40,6 +40,11 @@ export default defineComponent({
       playerName: "Kaneran",
       currentNode: 1
     }
+  },
+  computed: {
+    auditIndex(){
+      return this.gameProgress === undefined ? 0 : this.gameProgress?.node - 1;
+    }
   }
 })
 </script>
@@ -58,10 +63,17 @@ export default defineComponent({
         <MindnightPlayer v-for="player in gameSetup.players?.slice(2, 3)" :key="player.id" :player="player"
           imagePosition="left" @changeProposition="ChangeProposition($event)" />
         <div v-if="maintenanceInProgress">NODE MAINTENANCE IN PROGRESS...
-        <p>Node team {{ participants.join(",") }}</p>
+        <p>Node team {{ participants.map(p => p.name).join(",") }}</p>
         </div>
-        <div v-else-if="maintenanceCompleted">Node {{ currentNode }} Secured
-        <p>No hackers detected.</p>
+        <div v-else-if="maintenanceCompleted">
+        <div v-if="gameProgress?.audit[auditIndex]?.result === 'Hacked'">
+        <p>NODE {{ gameProgress?.node }} COMPROMISED</p>
+        <p>{{ gameProgress?.audit[auditIndex]?.numberOfHackersDetected }} hacker{{ gameProgress?.audit[auditIndex]?.numberOfHackersDetected == 2 ? 's' : '' }} detected</p>
+        </div>
+        <div v-else>
+          <p>NODE {{ gameProgress?.node }} SECURED</p>
+        <p>No hackers detected</p>
+        </div>
         </div>
         <TeamProposition v-else :player="gameSetup.players?.find(p => p.playerConfig.playerName = playerName)"
           :participants="participants" :nodes="gameSetup?.nodes" :gameProgress="gameProgress"

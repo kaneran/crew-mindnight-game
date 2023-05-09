@@ -17,7 +17,7 @@ export default defineComponent({
     <div>
         Game Nodes
         <p>Where to populate the nodes</p>
-        <GameNode playerCount="3" :state="{NumberOfHackersDetected: 2, Result: 'Secure'}"/>
+        <GameNode playerCount="3" :state="{numberOfHackersDetected: 2, result: 'Secure'}"/>
     </div>
 </template>
 

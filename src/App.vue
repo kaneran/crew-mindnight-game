@@ -1,7 +1,7 @@
 <template>
   <div id="gameRoom" v-if="playerEnteredRoom">
     <PlayerBadge playerName="Speedy" role="Agent" />
-    <PlayerRoom :gameSetup="gameSetup" :gameProgress="gameProgress" :maintenanceCompleted="maintenanceCompleted" :maintenceInProgress="maintenanceInProgress" @performMaintenance="PerformMaintenance($event)" />
+    <PlayerRoom :gameSetup="gameSetup" :gameProgress="gameProgress" :maintenanceCompleted="maintenanceCompleted" :maintenanceInProgress="maintenanceInProgress" @performMaintenance="PerformMaintenance($event)" />
     <GameNodes :nodes="gameSetup.nodes" />
   </div>
   <div id="enterNameDiv" v-else>
@@ -48,16 +48,22 @@ export default defineComponent({
   },
   methods: {
     PerformMaintenance(progress: GameProgress) {
+      this.maintenanceInProgress = !this.maintenanceInProgress
       axios.post('https://localhost:7240/maintenance', progress).then((response) => {
         this.gameProgress.audit?.push(response.data);
         setTimeout(() => {
           console.log("Play sound...")
           console.log("Maintenance in progress...")
-          this.maintenanceInProgress = !this.maintenanceInProgress
           this.maintenanceCompleted = !this.maintenanceCompleted
-          console.log(this.maintenanceInProgress)
+          this.maintenanceInProgress = !this.maintenanceInProgress
         },3000);
-        this.gameProgress.node++;
+        
+      }).then(() => {
+        //Resume game
+        setTimeout(() => {
+          this.maintenanceCompleted = !this.maintenanceCompleted
+          this.gameProgress.node++;
+        },4000);
       });
     },
     DisplayGameRoom() {
