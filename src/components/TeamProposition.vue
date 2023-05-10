@@ -4,9 +4,13 @@ import Player from '@/types/Player';
 import GameProgress from '@/types/GameProgress';
 import { defineComponent } from 'vue';
 import type { PropType } from 'vue';
+import ParticipantList from './ParticipantList.vue';
 
 /* eslint-disable */
 export default defineComponent({
+  components: {
+    ParticipantList
+  },
   props: {
     player: {} as PropType<Player>,
     participants: Array as PropType<Player[]>,
@@ -31,27 +35,13 @@ export default defineComponent({
     <p>&nbsp;is proposing</p>
   </div>
     <p>{{ participants?.length }}/{{ nodes?.find(n => n.id == gameProgress?.node)?.numberOfParticipantsRequired }}</p>
-    <div id="participantsList">
-      <div v-for="(participant, index) in participants">
-        <p :style="{color: participant.playerConfig.playerTextColour}">{{ participant.name }}</p>
-        <p v-if="index !== participants?.length - 1"> , </p>
-      </div>
-    </div>
+    <ParticipantList :participants="participants"/>
     <button id="proposeButton" class="mindnightButton" @click="PerformMaintenance">Propose</button>
   </div>
 </template>
 
 <style scoped>
-#participantsList{
-  display:flex;
-  justify-content: center;
-}
-
-#participantsList > div, #proposeButton, p{
+#proposeButton, p{
   font-size: x-large;
-}
-
-#participantsList > div{
-  display: flex;
 }
 </style>

@@ -6,6 +6,7 @@ import { PropType, defineComponent } from 'vue';
 import Player from '@/types/Player';
 import GameSetup from '@/types/GameSetup';
 import GameProgress from '@/types/GameProgress';
+import ParticipantList from './ParticipantList.vue';
 
 export default defineComponent({
   props: {
@@ -18,8 +19,9 @@ export default defineComponent({
   components: {
     MindnightPlayer,
     TeamProposition,
-    GameMission
-  },
+    GameMission,
+    ParticipantList
+},
   methods: {
     ChangeProposition(player: Player) {
       if(this.participants.length !== this.participantsArchive.length){
@@ -67,7 +69,7 @@ export default defineComponent({
         <MindnightPlayer v-for="player in gameSetup.players?.slice(2, 3)" :key="player.id" :player="player"
           imagePosition="left" @changeProposition="ChangeProposition($event)" />
         <div v-if="maintenanceInProgress">NODE MAINTENANCE IN PROGRESS...
-        <p>Node team {{ participantsArchive.map(p => p.name).join(",") }}</p>
+        <ParticipantList :participants="participantsArchive"/>
         </div>
         <div v-else-if="maintenanceCompleted">
         <div v-if="gameProgress?.audit[auditIndex]?.result === 'Hacked'">
