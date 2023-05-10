@@ -1,7 +1,7 @@
 <template>
   <div id="gameRoom" v-if="playerEnteredRoom">
     <PlayerBadge playerName="Speedy" role="Agent" />
-    <PlayerRoom :gameSetup="gameSetup" :gameProgress="gameProgress" :maintenanceCompleted="maintenanceCompleted" :maintenanceInProgress="maintenanceInProgress" @performMaintenance="PerformMaintenance($event)" />
+    <PlayerRoom :gameSetup="gameSetup" :gameProgress="gameProgress" :maintenanceCompleted="maintenanceCompleted" :maintenanceInProgress="maintenanceInProgress" @performMaintenance="PerformMaintenance($event)" :playerName="playerName" />
     <GameNodes :nodes="gameSetup.nodes" />
   </div>
   <div id="enterNameDiv" v-else>
@@ -9,7 +9,7 @@
       Wait! You haven't told us your your name!
     </h1>
     <div id="enterName">
-    <input type="text" id="name" :value="value" @input="OnInputChange">
+    <input type="text" id="name" :value="playerName" @input="OnInputChange">
     <button class="mindnightButton" @click="DisplayGameRoom">Submit</button>
   </div>
   </div>
@@ -37,10 +37,8 @@ export default defineComponent({
   data() {
     return {
       gameSetup: {} as GameSetup,
-      playerName: "Kaneran",
-      currentNode: 1,
       playerEnteredRoom: false,
-      value: "",
+      playerName: "",
       gameProgress: {node: 1, audit: [] as Outcome[], participants: [] as Player[]} as GameProgress,
       maintenanceInProgress: false,
       maintenanceCompleted : false
@@ -67,14 +65,14 @@ export default defineComponent({
       });
     },
     DisplayGameRoom() {
-      axios.get(`https://localhost:7240/Game?playerName=${this.value}`).then((response) => this.gameSetup = response.data)
+      axios.get(`https://localhost:7240/Game?playerName=${this.playerName}`).then((response) => this.gameSetup = response.data)
       this.playerEnteredRoom = !this.playerEnteredRoom
       var inGameAudio = new Audio(require('../src/assets/sounds/ingametheme.mp3'))
       inGameAudio.loop = true
       inGameAudio.play()
     },
     OnInputChange($event: any){
-      this.value = $event.originalTarget.value
+      this.playerName = $event.originalTarget.value
     }
   }
 })

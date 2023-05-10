@@ -7,13 +7,13 @@ import Player from '@/types/Player';
 import GameSetup from '@/types/GameSetup';
 import GameProgress from '@/types/GameProgress';
 
-
 export default defineComponent({
   props: {
     gameSetup: {} as PropType<GameSetup>,
     gameProgress: {} as PropType<GameProgress>,
     maintenanceCompleted: Boolean,
-    maintenanceInProgress: Boolean
+    maintenanceInProgress: Boolean,
+    playerName: String
   },
   components: {
     MindnightPlayer,
@@ -22,23 +22,27 @@ export default defineComponent({
   },
   methods: {
     ChangeProposition(player: Player) {
+      if(this.participants.length !== this.participantsArchive.length){
+        this.participantsArchive = []
+      }
       //If selected player has already been selected, remove them from proposition
       if (this.participants.includes(player)) {
         this.participants = this.participants.filter((p) => p.name !== player.name)
         //If there is space for another participant to part of the proposition then add them
-      } else if (this.participants.length !== this.gameSetup?.nodes?.find(n => n.id == this.currentNode)?.numberOfParticipantsRequired) {
+      } else if (this.participants.length !== this.gameSetup?.nodes?.find(n => n.id == this.gameProgress?.node)?.numberOfParticipantsRequired) {
         this.participants.push(player)
+        this.participantsArchive.push(player)
       }
     },
     PerformMaintenance(gameProgress: GameProgress) {
+      this.participants = []
       this.$emit('performMaintenance', gameProgress)
     }
   },
   data() {
     return {
       participants: [] as Player[],
-      playerName: "Kaneran",
-      currentNode: 1
+      participantsArchive: [] as Player[]
     }
   },
   computed: {
@@ -63,7 +67,7 @@ export default defineComponent({
         <MindnightPlayer v-for="player in gameSetup.players?.slice(2, 3)" :key="player.id" :player="player"
           imagePosition="left" @changeProposition="ChangeProposition($event)" />
         <div v-if="maintenanceInProgress">NODE MAINTENANCE IN PROGRESS...
-        <p>Node team {{ participants.map(p => p.name).join(",") }}</p>
+        <p>Node team {{ participantsArchive.map(p => p.name).join(",") }}</p>
         </div>
         <div v-else-if="maintenanceCompleted">
         <div v-if="gameProgress?.audit[auditIndex]?.result === 'Hacked'">
@@ -75,7 +79,7 @@ export default defineComponent({
         <p>No hackers detected</p>
         </div>
         </div>
-        <TeamProposition v-else :player="gameSetup.players?.find(p => p.playerConfig.playerName = playerName)"
+        <TeamProposition v-else :player="gameSetup.players?.find(p => p.playerConfig.playerName == playerName)"
           :participants="participants" :nodes="gameSetup?.nodes" :gameProgress="gameProgress"
           @performMaintenance="PerformMaintenance($event)" />
         <MindnightPlayer v-for="player in gameSetup.players?.slice(3, 4)" :key="player.id" :player="player"
