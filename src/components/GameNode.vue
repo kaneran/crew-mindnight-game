@@ -1,27 +1,36 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Outcome from '../types/Outcome';
 import type { PropType } from 'vue'
+import GameProgress from '@/types/GameProgress';
+import NodeInformation from './NodeInformation.vue';
+import GameSetup from '@/types/GameSetup';
 
 /* eslint-disable */
 export default defineComponent({
   props: {
-    playerCount: Number,
-    state: Object as PropType<Outcome>,
-    participants: Array as PropType<String[]>
-  }
+    gameProgress: {} as PropType<GameProgress>,
+    gameSetup: {} as PropType<GameSetup>,
+    nodeId: Number
+  },
+  computed: {
+    auditIndex(){
+      return this.nodeId === undefined ? 0 : this.nodeId - 1;
+    }
+  },
+  components: { NodeInformation }
 })
 
 </script>
 
 <template>
   <div>
-    3
-    <p>{{ playerCount }} -- {{ state?.NumberOfHackersDetected }} -- {{ state?.Result }}</p>
 
     <div style="text-align:center;">
       <div class="tooltip">Hover over me
-        <span class="tooltiptext">Where to insert data</span>
+        <span class="tooltiptext">
+          <NodeInformation :outcome="gameProgress?.audit[auditIndex]" :gameSetup="gameSetup"/>
+        </span>
+        
       </div>
 
     </div>

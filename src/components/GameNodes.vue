@@ -1,15 +1,15 @@
 <script lang="ts">
-import Node from '@/types/Node';
-import GameNode from './GameNode.vue';
 import { PropType, defineComponent } from 'vue';
+import GameProgress from '@/types/GameProgress';
+import GameNode from './GameNode.vue';
+import GameSetup from '@/types/GameSetup';
 
 export default defineComponent({
-  props: {
-    nodes: [] as PropType<Node[]>
-  },
-  components: {
-    GameNode
-  },
+    props: {
+        gameSetup: {} as PropType<GameSetup>,
+        gameProgress: {} as PropType<GameProgress>
+    },
+    components: { GameNode }
 })
 </script>
 
@@ -17,7 +17,7 @@ export default defineComponent({
     <div>
         Game Nodes
         <p>Where to populate the nodes</p>
-        <GameNode playerCount="3" :state="{numberOfHackersDetected: 2, result: 'Secure'}"/>
+        <GameNode v-for="node in gameSetup?.nodes" :key="node.id" :gameProgress="gameProgress" :gameSetup="gameSetup" :nodeId="node.id"/>
     </div>
 </template>
 

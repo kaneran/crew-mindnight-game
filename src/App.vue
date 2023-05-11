@@ -2,7 +2,7 @@
   <div id="gameRoom" v-if="playerEnteredRoom">
     <PlayerBadge playerName="Speedy" role="Agent" />
     <PlayerRoom :gameSetup="gameSetup" :gameProgress="gameProgress" :maintenanceCompleted="maintenanceCompleted" :maintenanceInProgress="maintenanceInProgress" @performMaintenance="PerformMaintenance($event)" :playerName="playerName" />
-    <GameNodes :nodes="gameSetup.nodes" />
+    <GameNodes :gameSetup="gameSetup" :gameProgress="gameProgress" />
   </div>
   <div id="enterNameDiv" v-else>
     <h1 style="color: white">
