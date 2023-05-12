@@ -4,14 +4,15 @@ import Player from '@/types/Player';
 
 export default defineComponent({
   props: {
-    participants: Array as PropType<Player[]>
+    participants: Array as PropType<Player[]>,
+    reduceFontSize: Boolean
   }
 })
 </script>
 
 <template>
     <div id="participantsList">
-      <div v-for="(participant, index) in participants" :key="index">
+      <div v-for="(participant, index) in participants" :key="index" :style="{fontSize: reduceFontSize ? 'large' : 'x-large'}">
         <p :style="{color: participant.playerConfig.playerTextColour}">{{ participant.name }}</p>
         <p v-if="index !== participants?.length - 1"> , </p>
       </div>

@@ -95,11 +95,13 @@ export default defineComponent({
   background-image: url('./assets/images/stage.jpg');
   background-size: cover;
   background-repeat: no-repeat;
+  height: 100vh;
 }
 
 #gameRoom {
   display: flex;
   width: auto;
+  height: 100vh;
 }
 
 #name {
