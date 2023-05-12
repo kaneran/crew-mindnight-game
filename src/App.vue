@@ -48,12 +48,12 @@ export default defineComponent({
     PerformMaintenance(progress: GameProgress) {
       this.maintenanceInProgress = !this.maintenanceInProgress
       axios.post('https://localhost:7240/maintenance', progress).then((response) => {
-        this.gameProgress.audit?.push(response.data);
         setTimeout(() => {
           console.log("Play sound...")
           console.log("Maintenance in progress...")
           this.maintenanceCompleted = !this.maintenanceCompleted
           this.maintenanceInProgress = !this.maintenanceInProgress
+          this.gameProgress.audit?.push(response.data);
         },3000);
         
       }).then(() => {

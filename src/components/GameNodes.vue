@@ -15,8 +15,6 @@ export default defineComponent({
 
 <template>
     <div>
-        Game Nodes
-        <p>Where to populate the nodes</p>
         <GameNode v-for="node in gameSetup?.nodes" :key="node.id" :gameProgress="gameProgress" :gameSetup="gameSetup" :nodeId="node.id"/>
     </div>
 </template>
