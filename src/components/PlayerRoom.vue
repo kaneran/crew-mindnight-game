@@ -27,16 +27,19 @@ export default defineComponent({
   },
   methods: {
     ChangeProposition(player: Player) {
+      var selectedAudio = new Audio(require('../assets/sounds/selected.mp3'))
       if (this.participants.length !== this.participantsArchive.length) {
         this.participantsArchive = []
       }
       //If selected player has already been selected, remove them from proposition
       if (this.participants.includes(player)) {
         this.participants = this.participants.filter((p) => p.name !== player.name)
+        selectedAudio.play()
         //If there is space for another participant to part of the proposition then add them
       } else if (this.participants.length !== this.gameSetup?.nodes?.find(n => n.id == this.gameProgress?.node)?.numberOfParticipantsRequired) {
         this.participants.push(player)
         this.participantsArchive.push(player)
+        selectedAudio.play()
       }
     },
     PerformMaintenance(gameProgress: GameProgress) {
