@@ -18,9 +18,3 @@ export default defineComponent({
         <GameNode v-for="node in gameSetup?.nodes" :key="node.id" :gameProgress="gameProgress" :gameSetup="gameSetup" :nodeId="node.id"/>
     </div>
 </template>
-
-<style scoped>
-div{
-  border: 5px solid purple;
-}
-</style>

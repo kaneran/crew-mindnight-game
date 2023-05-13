@@ -47,7 +47,6 @@ div.topOrBottom {
 
 div {
   min-width: 35%;
-  border: 5px solid green;
 }
 
 .highlight{

@@ -37,9 +37,9 @@ export default defineComponent({
   <div>
     <div>
     <p :style="{color: player?.playerConfig.playerTextColour}">{{ player?.name }}</p>
-    <p>&nbsp;is proposing</p>
+    <p style="color: white">&nbsp;is proposing</p>
   </div>
-    <p>{{ participants?.length }}/{{ nodes?.find(n => n.id == gameProgress?.node)?.numberOfParticipantsRequired }}</p>
+    <p style="color: white;">{{ participants?.length }}/{{ nodes?.find(n => n.id == gameProgress?.node)?.numberOfParticipantsRequired }}</p>
     <ParticipantList :participants="participants"/>
     <button id="proposeButton" class="mindnightButton" @click="PerformMaintenance" :disabled="participants?.length != NumberOfParticipantsRequired">Propose</button>
   </div>

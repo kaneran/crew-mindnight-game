@@ -93,18 +93,18 @@ export default defineComponent({
       <div class="middle">
         <MindnightPlayer v-for="player in gameSetup.players?.slice(2, 3)" :key="player.id" :player="player"
           imagePosition="left" @changeProposition="ChangeProposition($event)" :isSelected="participants.includes(player)"/>
-        <div v-if="maintenanceInProgress">NODE MAINTENANCE IN PROGRESS...
+        <div v-if="maintenanceInProgress" class="info">NODE MAINTENANCE IN PROGRESS...
           <ParticipantList :participants="participantsArchive" />
         </div>
         <div v-else-if="maintenanceCompleted">
           <div v-if="gameProgress?.audit[auditIndex]?.result === 'Hacked'">
-            <p>NODE {{ gameProgress?.node }} COMPROMISED</p>
-            <p>{{ gameProgress?.audit[auditIndex]?.numberOfHackersDetected }} hacker{{
+            <p class="hacker">NODE {{ gameProgress?.node }} COMPROMISED</p>
+            <p class="info">{{ gameProgress?.audit[auditIndex]?.numberOfHackersDetected }} hacker{{
               gameProgress?.audit[auditIndex]?.numberOfHackersDetected == 2 ? 's' : '' }} detected</p>
           </div>
           <div v-else>
-            <p>NODE {{ gameProgress?.node }} SECURED</p>
-            <p>No hackers detected</p>
+            <p class="agent">NODE {{ gameProgress?.node }} SECURED</p>
+            <p class="info">No hackers detected</p>
           </div>
         </div>
         <div v-else>
@@ -127,7 +127,6 @@ export default defineComponent({
 
 <style scoped>
 #roomDiv {
-  border: 5px solid red;
   flex-grow: 5;
   min-height: 90vh;
 }
@@ -149,6 +148,11 @@ export default defineComponent({
 #selectPhase {
   font-size: large;
   color: white;
+}
+
+.info{
+  color: white; 
+  font-size: large;
 }
 
 </style>
