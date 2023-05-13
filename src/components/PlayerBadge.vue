@@ -24,16 +24,15 @@ export default defineComponent({
       <p>{{ player?.role }}</p>
     </div>
   </div>
+  <p id="gameStatus">2 HACKERS IN THE GAME</p>
   </div>
 </template>
 
 <style scoped>
-div {
-  border: 5px solid blue;
-}
 
 #playerBadgeDiv {
   display: flex;
+  flex-direction: column;
 }
 
 #playerDataDiv{
@@ -56,5 +55,11 @@ div {
 
 #playerBadgeDataDiv{
   display: flex;
+  justify-content: space-evenly;
+}
+
+#gameStatus{
+  color: #e00b1d;
+  font-size: x-large;
 }
 </style>
