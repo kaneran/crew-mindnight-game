@@ -54,14 +54,18 @@ export default defineComponent({
           this.maintenanceCompleted = !this.maintenanceCompleted
           this.maintenanceInProgress = !this.maintenanceInProgress
           this.gameProgress.audit?.push(response.data);
+          var auditNode = this.gameProgress.node - 1
+          var outcomeAudioFilename = this.gameProgress.audit[auditNode].result === "Secured" ? "secured.mp3" : "hacked.mp3"
+          var outcomeAudio = new Audio(require(`../src/assets/sounds/${outcomeAudioFilename}`))
+          outcomeAudio.play()
         },3000);
         
       }).then(() => {
         //Resume game
         setTimeout(() => {
           this.maintenanceCompleted = !this.maintenanceCompleted
-          this.gameProgress.node++;
-        },4000);
+          this.gameProgress.node++
+        },5000);
       });
     },
     DisplayGameRoom() {
