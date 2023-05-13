@@ -17,6 +17,11 @@ export default defineComponent({
     nodes: Array as PropType<Node[]>,
     gameProgress: {} as PropType<GameProgress>
   },
+  computed:{
+    NumberOfParticipantsRequired(){
+      return this.nodes?.find(n => n.id == this.gameProgress?.node)?.numberOfParticipantsRequired
+    }
+  },
   methods: {
     PerformMaintenance(){
       var acceptedAudio = new Audio(require('../assets/sounds/accepted.mp3'))
@@ -36,7 +41,7 @@ export default defineComponent({
   </div>
     <p>{{ participants?.length }}/{{ nodes?.find(n => n.id == gameProgress?.node)?.numberOfParticipantsRequired }}</p>
     <ParticipantList :participants="participants"/>
-    <button id="proposeButton" class="mindnightButton" @click="PerformMaintenance">Propose</button>
+    <button id="proposeButton" class="mindnightButton" @click="PerformMaintenance" :disabled="participants?.length != NumberOfParticipantsRequired">Propose</button>
   </div>
 </template>
 
