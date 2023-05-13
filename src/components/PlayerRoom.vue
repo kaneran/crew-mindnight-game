@@ -7,6 +7,8 @@ import Player from '@/types/Player';
 import GameSetup from '@/types/GameSetup';
 import GameProgress from '@/types/GameProgress';
 import ParticipantList from './ParticipantList.vue';
+import GameOverData from '@/types/GameOverData';
+import GameOver from './GameOver.vue';
 
 export default defineComponent({
   props: {
@@ -20,7 +22,8 @@ export default defineComponent({
     MindnightPlayer,
     TeamProposition,
     GameMission,
-    ParticipantList
+    ParticipantList,
+    GameOver
   },
   methods: {
     ChangeProposition(player: Player) {
@@ -51,14 +54,21 @@ export default defineComponent({
     auditIndex() {
       return this.gameProgress === undefined ? 0 : this.gameProgress?.node - 1
     },
+    nodesSecuredCount(){
+      return this.gameProgress?.audit.filter(node => node.result === "Secured").length
+    },
+    objective(){
+      const nodesLeftToSecure = 3 - (this.nodesSecuredCount ? this.nodesSecuredCount : 0);
+      return `SECURE ${nodesLeftToSecure} NODES`;
+    },
     finalGameData() {
-      const agentsWin = this.gameProgress?.audit.filter(node => node.result === "Secured").length === 3
+      const agentsWin = this.nodesSecuredCount === 3
       const hackersWin = this.gameProgress?.audit.filter(node => node.result === "Hacked").length === 3
-
+      const hackers = this.gameSetup?.players?.filter(p => p.role === "Hacker")
       if (agentsWin) {
-        return { hackersWin: false, message: "AGENTS WIN", participants: this.gameSetup?.players?.filter(p => p.role === "Agent") }
+        return { hackersWin: false, message: "AGENTS WIN", participants: hackers } as GameOverData
       } else if (hackersWin) {
-        return { hackersWin: true, message: "HACKERS WIN", participants: this.gameSetup?.players?.filter(p => p.role === "Hacker") }
+        return { hackersWin: true, message: "HACKERS WIN", participants: hackers} as GameOverData
       } else {
         return {}
       }
@@ -69,8 +79,8 @@ export default defineComponent({
 
 <template>
   <div id="roomDiv">
-    <GameMission role="Agent" objective="SECURE 3 NODES" />
-    <p>Node {{ gameProgress?.node }}</p>
+    <GameMission role="Agent" :objective="objective" />
+    <p>Node {{ gameProgress?.node > 5 ? 5 : gameProgress?.node }}</p>
     <p id="selectPhase">Select Phase</p>
     <div id="playersDiv">
       <div>
@@ -98,13 +108,7 @@ export default defineComponent({
           <TeamProposition v-if="finalGameData.message === undefined"
             :player="gameSetup.players?.find(p => p.playerConfig.playerName == playerName)" :participants="participants"
             :nodes="gameSetup?.nodes" :gameProgress="gameProgress" @performMaintenance="PerformMaintenance($event)" />
-          <div id="gameOver" v-else>
-            <p id="gameStatus" :class="finalGameData.hackersWin ? 'hacker' : 'agent'">{{ finalGameData.message }} </p>
-            <div id="hackers">
-              <p :style="{ fontSize: 'x-large' }">Hackers:&nbsp;</p>
-              <ParticipantList :participants="finalGameData.participants" />
-            </div>
-          </div>
+          <GameOver v-else :finalGameData="finalGameData"/>
         </div>
 
         <MindnightPlayer v-for="player in gameSetup.players?.slice(3, 4)" :key="player.id" :player="player"
@@ -143,18 +147,4 @@ export default defineComponent({
   font-size: large;
 }
 
-#hackers {
-  display: flex;
-}
-
-#gameStatus {
-  font-size: xxx-large;
-  margin: 30px;
-}
-
-#gameOver {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
 </style>
