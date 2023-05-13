@@ -85,11 +85,11 @@ export default defineComponent({
     <div id="playersDiv">
       <div>
         <MindnightPlayer v-for="player in gameSetup.players?.slice(0, 2)" :key="player.id" :player="player"
-          imagePosition="left" @changeProposition="ChangeProposition($event)" />
+          imagePosition="left" @changeProposition="ChangeProposition($event)" :isSelected="participants.includes(player)" />
       </div>
       <div class="middle">
         <MindnightPlayer v-for="player in gameSetup.players?.slice(2, 3)" :key="player.id" :player="player"
-          imagePosition="left" @changeProposition="ChangeProposition($event)" />
+          imagePosition="left" @changeProposition="ChangeProposition($event)" :isSelected="participants.includes(player)"/>
         <div v-if="maintenanceInProgress">NODE MAINTENANCE IN PROGRESS...
           <ParticipantList :participants="participantsArchive" />
         </div>
@@ -112,11 +112,11 @@ export default defineComponent({
         </div>
 
         <MindnightPlayer v-for="player in gameSetup.players?.slice(3, 4)" :key="player.id" :player="player"
-          imagePosition="left" @changeProposition="ChangeProposition($event)" />
+          imagePosition="left" @changeProposition="ChangeProposition($event)" :isSelected="participants.includes(player)"/>
       </div>
       <div>
         <MindnightPlayer v-for="player in gameSetup.players?.slice(4, 6)" :key="player.id" :player="player"
-          imagePosition="left" @changeProposition="ChangeProposition($event)" />
+          imagePosition="left" @changeProposition="ChangeProposition($event)" :isSelected="participants.includes(player)"/>
       </div>
     </div>
   </div>
@@ -145,6 +145,7 @@ export default defineComponent({
 
 #selectPhase {
   font-size: large;
+  color: white;
 }
 
 </style>

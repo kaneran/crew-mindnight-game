@@ -17,7 +17,7 @@ export default defineComponent({
         <p style="color: white">YOU ARE AN </p>
         <p style="color: green">&nbsp;{{ role?.toUpperCase() }}</p>
       </div>
-        <p style="color: green">{{ objective }}</p>
+        <p id="objective" style="color: green">{{ objective }}</p>
     </div>
 </template>
 
@@ -27,7 +27,15 @@ export default defineComponent({
   justify-content: center;
 }
 
+#role > p {
+  margin: 10px 0px 10px 0px;
+}
+
 p{
   font-size: x-large;
+}
+
+#objective{
+  margin:0;
 }
 </style>

@@ -7,7 +7,8 @@ import type { PropType } from 'vue'
 export default defineComponent({
   props: {
     player: {} as PropType<Player>,
-    imagePosition: String
+    imagePosition: String,
+    isSelected: Boolean
   },
   methods: {
     passPlayerName() {
@@ -25,8 +26,8 @@ export default defineComponent({
 
 <template>
   <div @click="passPlayerName"
-    :class="{ topOrBottom: player?.id && topAndBottomIds.includes(player.id) || player?.id == 0 }">
-    <img :src="require(`@/assets/images/${player?.playerConfig.playerCharacterFileName}.png`)" :alt="player?.name" :class="{ left: player?.id % 2  == 0 || player?.id == 0 }" />
+    :class="{topOrBottom: player?.id && topAndBottomIds.includes(player.id) || player?.id == 0}">
+    <img :src="require(`@/assets/images/${player?.playerConfig.playerCharacterFileName}.png`)" :alt="player?.name" :class="{ left: player?.id % 2  == 0 || player?.id == 0, highlight: isSelected}" />
     <p :style="{ color: player?.playerConfig.playerTextColour}">{{ player?.name }}</p>
   </div>
 </template>
@@ -47,5 +48,9 @@ div.topOrBottom {
 div {
   min-width: 35%;
   border: 5px solid green;
+}
+
+.highlight{
+  box-shadow: 0px 0px 40px 10px #ffe300ad;
 }
 </style>
