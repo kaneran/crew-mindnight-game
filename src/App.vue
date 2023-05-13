@@ -1,4 +1,5 @@
 <template>
+  <div id="appMain" :class="!maintenanceInProgress ? 'showStage' : ''">
   <div id="gameRoom" v-if="playerEnteredRoom">
     <PlayerBadge playerName="Speedy" role="Agent" />
     <PlayerRoom :gameSetup="gameSetup" :gameProgress="gameProgress" :maintenanceCompleted="maintenanceCompleted" :maintenanceInProgress="maintenanceInProgress" @performMaintenance="PerformMaintenance($event)" :playerName="playerName" />
@@ -13,6 +14,7 @@
     <button class="mindnightButton" @click="DisplayGameRoom">Submit</button>
   </div>
   </div>
+</div>
 </template>
 
 <script lang="ts">
@@ -49,15 +51,13 @@ export default defineComponent({
       this.maintenanceInProgress = !this.maintenanceInProgress
       axios.post('https://localhost:7240/maintenance', progress).then((response) => {
         setTimeout(() => {
-          console.log("Play sound...")
-          console.log("Maintenance in progress...")
-          this.maintenanceCompleted = !this.maintenanceCompleted
-          this.maintenanceInProgress = !this.maintenanceInProgress
           this.gameProgress.audit?.push(response.data);
           var auditNode = this.gameProgress.node - 1
           var outcomeAudioFilename = this.gameProgress.audit[auditNode].result === "Secured" ? "secured.mp3" : "hacked.mp3"
           var outcomeAudio = new Audio(require(`../src/assets/sounds/${outcomeAudioFilename}`))
           outcomeAudio.play()
+          this.maintenanceCompleted = !this.maintenanceCompleted
+          this.maintenanceInProgress = !this.maintenanceInProgress
         },3000);
         
       }).then(() => {
@@ -96,10 +96,13 @@ export default defineComponent({
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  height: 100vh;
+}
+
+.showStage{
   background-image: url('./assets/images/stage.jpg');
   background-size: cover;
   background-repeat: no-repeat;
-  height: 100vh;
 }
 
 #gameRoom {
