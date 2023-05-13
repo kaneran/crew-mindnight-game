@@ -14,15 +14,14 @@ export default defineComponent({
   },
   data(){
     return {
-      nodeBackgroundColourMap : {current: "#ffffff", uncompleted: "#3b3d41", secured: "#1e8559", hacked: "#751b12"},
-      nodeTextColourMap : {current: "#000000", uncompleted: "#d1cbcb", secured: "#9ed9a2", hacked: "#d6b6b6"}
+      nodeColourMap : {current: {backgroundColour:"#ffffff", textColour: "#000000"}, uncompleted: {backgroundColour:"#3b3d41", textColour: "#d1cbcb"}, secured: {backgroundColour:"#1e8559", textColour: "#9ed9a2"}, hacked: {backgroundColour:"#751b12", textColour: "#d6b6b6"}}
     }
   },
   computed: {
     auditIndex(){
       return this.nodeId === undefined ? 0 : this.nodeId - 1;
     },
-    backgroundColour(){
+    colour(){
       let value;
       if(this.gameProgress?.node === this.nodeId){
         value = "current"
@@ -31,15 +30,6 @@ export default defineComponent({
       }
       return value
     },
-    fontColour(){
-      let value;
-      if(this.gameProgress?.node === this.nodeId){
-        value = "current"
-      }else{
-        value = this.gameProgress?.audit[this.auditIndex]?.result ? this.gameProgress?.audit[this.auditIndex]?.result.toLowerCase() : 'uncompleted'
-      }
-      return value
-    }
   },
   components: { NodeInformation }
 })
@@ -47,11 +37,11 @@ export default defineComponent({
 </script>
 
 <template>
-  <div id="gameNode" :style="{backgroundColor: nodeBackgroundColourMap[backgroundColour]}">
+  <div id="gameNode" :style="{backgroundColor: nodeColourMap[colour].backgroundColour}">
     <div style="text-align:center;">
       <div class="tooltip">
-        <p :style="{color:nodeTextColourMap[fontColour]}">{{ gameSetup?.nodes[auditIndex]?.numberOfParticipantsRequired }}</p>
-        <p :style="{color:nodeTextColourMap[fontColour]}">players</p>
+        <p :style="{color:nodeColourMap[colour].textColour}">{{ gameSetup?.nodes[auditIndex]?.numberOfParticipantsRequired }}</p>
+        <p :style="{color:nodeColourMap[colour].textColour}">players</p>
         <span class="tooltiptext">
           <NodeInformation :outcome="gameProgress?.audit[auditIndex]" :gameSetup="gameSetup"/>
         </span>
