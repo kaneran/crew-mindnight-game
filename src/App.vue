@@ -133,4 +133,14 @@ export default defineComponent({
 #enterNameDiv{
   height: 100vh;
 }
+
+.hacker{
+  color: #e00b1d;
+  font-size: x-large;
+}
+
+.agent{
+  color: green;
+  font-size: x-large;
+}
 </style>

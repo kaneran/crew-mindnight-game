@@ -21,10 +21,10 @@ export default defineComponent({
     TeamProposition,
     GameMission,
     ParticipantList
-},
+  },
   methods: {
     ChangeProposition(player: Player) {
-      if(this.participants.length !== this.participantsArchive.length){
+      if (this.participants.length !== this.participantsArchive.length) {
         this.participantsArchive = []
       }
       //If selected player has already been selected, remove them from proposition
@@ -48,8 +48,20 @@ export default defineComponent({
     }
   },
   computed: {
-    auditIndex(){
-      return this.gameProgress === undefined ? 0 : this.gameProgress?.node - 1;
+    auditIndex() {
+      return this.gameProgress === undefined ? 0 : this.gameProgress?.node - 1
+    },
+    finalGameData() {
+      const agentsWin = this.gameProgress?.audit.filter(node => node.result === "Secured").length === 3
+      const hackersWin = this.gameProgress?.audit.filter(node => node.result === "Hacked").length === 3
+
+      if (agentsWin) {
+        return { hackersWin: false, message: "AGENTS WIN", participants: this.gameSetup?.players?.filter(p => p.role === "Agent") }
+      } else if (hackersWin) {
+        return { hackersWin: true, message: "HACKERS WIN", participants: this.gameSetup?.players?.filter(p => p.role === "Hacker") }
+      } else {
+        return {}
+      }
     }
   }
 })
@@ -69,21 +81,32 @@ export default defineComponent({
         <MindnightPlayer v-for="player in gameSetup.players?.slice(2, 3)" :key="player.id" :player="player"
           imagePosition="left" @changeProposition="ChangeProposition($event)" />
         <div v-if="maintenanceInProgress">NODE MAINTENANCE IN PROGRESS...
-        <ParticipantList :participants="participantsArchive"/>
+          <ParticipantList :participants="participantsArchive" />
         </div>
         <div v-else-if="maintenanceCompleted">
-        <div v-if="gameProgress?.audit[auditIndex]?.result === 'Hacked'">
-        <p>NODE {{ gameProgress?.node }} COMPROMISED</p>
-        <p>{{ gameProgress?.audit[auditIndex]?.numberOfHackersDetected }} hacker{{ gameProgress?.audit[auditIndex]?.numberOfHackersDetected == 2 ? 's' : '' }} detected</p>
+          <div v-if="gameProgress?.audit[auditIndex]?.result === 'Hacked'">
+            <p>NODE {{ gameProgress?.node }} COMPROMISED</p>
+            <p>{{ gameProgress?.audit[auditIndex]?.numberOfHackersDetected }} hacker{{
+              gameProgress?.audit[auditIndex]?.numberOfHackersDetected == 2 ? 's' : '' }} detected</p>
+          </div>
+          <div v-else>
+            <p>NODE {{ gameProgress?.node }} SECURED</p>
+            <p>No hackers detected</p>
+          </div>
         </div>
         <div v-else>
-          <p>NODE {{ gameProgress?.node }} SECURED</p>
-        <p>No hackers detected</p>
+          <TeamProposition v-if="finalGameData.message === undefined"
+            :player="gameSetup.players?.find(p => p.playerConfig.playerName == playerName)" :participants="participants"
+            :nodes="gameSetup?.nodes" :gameProgress="gameProgress" @performMaintenance="PerformMaintenance($event)" />
+          <div id="gameOver" v-else>
+            <p id="gameStatus" :class="finalGameData.hackersWin ? 'hacker' : 'agent'">{{ finalGameData.message }} </p>
+            <div id="hackers">
+              <p :style="{ fontSize: 'x-large' }">Hackers:&nbsp;</p>
+              <ParticipantList :participants="finalGameData.participants" />
+            </div>
+          </div>
         </div>
-        </div>
-        <TeamProposition v-else :player="gameSetup.players?.find(p => p.playerConfig.playerName == playerName)"
-          :participants="participants" :nodes="gameSetup?.nodes" :gameProgress="gameProgress"
-          @performMaintenance="PerformMaintenance($event)" />
+
         <MindnightPlayer v-for="player in gameSetup.players?.slice(3, 4)" :key="player.id" :player="player"
           imagePosition="left" @changeProposition="ChangeProposition($event)" />
       </div>
@@ -118,5 +141,20 @@ export default defineComponent({
 
 #selectPhase {
   font-size: large;
+}
+
+#hackers {
+  display: flex;
+}
+
+#gameStatus {
+  font-size: xxx-large;
+  margin: 30px;
+}
+
+#gameOver {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 </style>
