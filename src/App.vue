@@ -1,7 +1,7 @@
 <template>
   <div id="appMain" :class="!maintenanceInProgress ? 'showStage' : ''">
   <div id="gameRoom" v-if="playerEnteredRoom">
-    <PlayerBadge playerName="Speedy" role="Agent" />
+    <PlayerBadge :player="gameSetup.players?.find(p => p.name === playerName)" />
     <PlayerRoom :gameSetup="gameSetup" :gameProgress="gameProgress" :maintenanceCompleted="maintenanceCompleted" :maintenanceInProgress="maintenanceInProgress" @performMaintenance="PerformMaintenance($event)" :playerName="playerName" />
     <GameNodes :gameSetup="gameSetup" :gameProgress="gameProgress" />
   </div>
