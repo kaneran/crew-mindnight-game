@@ -1,20 +1,22 @@
 <template>
   <div id="appMain" :class="!maintenanceInProgress ? 'showStage' : ''">
-  <div id="gameRoom" v-if="playerEnteredRoom">
-    <PlayerBadge :player="gameSetup.players?.find(p => p.name === playerName)" />
-    <PlayerRoom :gameSetup="gameSetup" :gameProgress="gameProgress" :maintenanceCompleted="maintenanceCompleted" :maintenanceInProgress="maintenanceInProgress" @performMaintenance="PerformMaintenance($event)" :playerName="playerName" />
-    <GameNodes :gameSetup="gameSetup" :gameProgress="gameProgress" />
+    <div id="gameRoom" v-if="playerEnteredRoom">
+      <PlayerBadge :player="gameSetup.players?.find(p => p.name === playerName)" />
+      <PlayerRoom :gameSetup="gameSetup" :gameProgress="gameProgress" :maintenanceCompleted="maintenanceCompleted"
+        :maintenanceInProgress="maintenanceInProgress" @performMaintenance="PerformMaintenance($event)"
+        :playerName="playerName" />
+      <GameNodes :gameSetup="gameSetup" :gameProgress="gameProgress" />
+    </div>
+    <div id="enterNameDiv" v-else>
+      <h1 style="color: white">
+        Wait! You haven't told us your your name!
+      </h1>
+      <div id="enterName">
+        <input type="text" id="name" :value="playerName" @input="OnInputChange">
+        <button class="mindnightButton" @click="DisplayGameRoom">Submit</button>
+      </div>
+    </div>
   </div>
-  <div id="enterNameDiv" v-else>
-    <h1 style="color: white">
-      Wait! You haven't told us your your name!
-    </h1>
-    <div id="enterName">
-    <input type="text" id="name" :value="playerName" @input="OnInputChange">
-    <button class="mindnightButton" @click="DisplayGameRoom">Submit</button>
-  </div>
-  </div>
-</div>
 </template>
 
 <script lang="ts">
@@ -27,6 +29,7 @@ import GameSetup from './types/GameSetup';
 import GameProgress from './types/GameProgress';
 import Outcome from './types/Outcome';
 import Player from './types/Player';
+import {checkGameOver} from '../src/utils';
 
 export default defineComponent({
   components: {
@@ -41,9 +44,9 @@ export default defineComponent({
       gameSetup: {} as GameSetup,
       playerEnteredRoom: false,
       playerName: "",
-      gameProgress: {node: 1, audit: [] as Outcome[], participants: [] as Player[]} as GameProgress,
+      gameProgress: { node: 1, audit: [] as Outcome[], participants: [] as Player[] } as GameProgress,
       maintenanceInProgress: false,
-      maintenanceCompleted : false
+      maintenanceCompleted: false
     }
   },
   methods: {
@@ -51,21 +54,25 @@ export default defineComponent({
       this.maintenanceInProgress = !this.maintenanceInProgress
       axios.post('https://localhost:7240/maintenance', progress).then((response) => {
         setTimeout(() => {
-          this.gameProgress.audit?.push(response.data);
-          var auditNode = this.gameProgress.node - 1
-          var outcomeAudioFilename = this.gameProgress.audit[auditNode].result === "Secured" ? "secured.mp3" : "hacked.mp3"
-          var outcomeAudio = new Audio(require(`../src/assets/sounds/${outcomeAudioFilename}`))
-          outcomeAudio.play()
-          this.maintenanceCompleted = !this.maintenanceCompleted
+          this.gameProgress.audit?.push(response.data)
+          if (!checkGameOver(this.gameProgress)) {
+            var auditNode = this.gameProgress.node - 1
+            var outcomeAudioFilename = this.gameProgress.audit[auditNode].result === "Secured" ? "secured.mp3" : "hacked.mp3"
+            var outcomeAudio = new Audio(require(`../src/assets/sounds/${outcomeAudioFilename}`))
+            outcomeAudio.play()
+            this.maintenanceCompleted = !this.maintenanceCompleted
+          }
           this.maintenanceInProgress = !this.maintenanceInProgress
-        },3000);
-        
+        }, 3000);
+
       }).then(() => {
         //Resume game
         setTimeout(() => {
-          this.maintenanceCompleted = !this.maintenanceCompleted
+          if (!checkGameOver(this.gameProgress)) {
+            this.maintenanceCompleted = !this.maintenanceCompleted
+          }
           this.gameProgress.node++
-        },5000);
+        }, 5000);
       });
     },
     DisplayGameRoom() {
@@ -75,7 +82,7 @@ export default defineComponent({
       inGameAudio.loop = true
       inGameAudio.play()
     },
-    OnInputChange($event: any){
+    OnInputChange($event: any) {
       this.playerName = $event.originalTarget.value
     }
   }
@@ -99,7 +106,7 @@ export default defineComponent({
   height: 100vh;
 }
 
-.showStage{
+.showStage {
   background-image: url('./assets/images/stage.jpg');
   background-size: cover;
   background-repeat: no-repeat;
@@ -124,22 +131,22 @@ export default defineComponent({
   font-size: x-large;
 }
 
-#enterName{
-  display:flex;
+#enterName {
+  display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-#enterNameDiv{
+#enterNameDiv {
   height: 100vh;
 }
 
-.hacker{
+.hacker {
   color: #e00b1d;
   font-size: x-large;
 }
 
-.agent{
+.agent {
   color: green;
   font-size: x-large;
 }

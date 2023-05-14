@@ -9,6 +9,7 @@ import GameProgress from '@/types/GameProgress';
 import ParticipantList from './ParticipantList.vue';
 import GameOverData from '@/types/GameOverData';
 import GameOver from './GameOver.vue';
+import {checkHackersWin, checkAgentsWin, nodesSecuredCount} from '../utils';
 
 export default defineComponent({
   props: {
@@ -57,16 +58,16 @@ export default defineComponent({
     auditIndex() {
       return this.gameProgress === undefined ? 0 : this.gameProgress?.node - 1
     },
-    nodesSecuredCount(){
-      return this.gameProgress?.audit.filter(node => node.result === "Secured").length
-    },
     objective(){
-      const nodesLeftToSecure = 3 - (this.nodesSecuredCount ? this.nodesSecuredCount : 0);
+      const nodesLeftToSecure = 3 - (this.gameProgress && nodesSecuredCount(this.gameProgress) ? nodesSecuredCount(this.gameProgress) : 0);
       return `SECURE ${nodesLeftToSecure} NODES`;
     },
     finalGameData() {
-      const agentsWin = this.nodesSecuredCount === 3
-      const hackersWin = this.gameProgress?.audit.filter(node => node.result === "Hacked").length === 3
+      let hackersWin, agentsWin
+      if(this.gameProgress){
+        hackersWin = checkHackersWin(this.gameProgress)
+        agentsWin = checkAgentsWin(this.gameProgress)
+      }
       const hackers = this.gameSetup?.players?.filter(p => p.role === "Hacker")
       if (agentsWin) {
         return { hackersWin: false, message: "AGENTS WIN", participants: hackers } as GameOverData
