@@ -9,7 +9,7 @@ import GameProgress from '@/types/GameProgress';
 import ParticipantList from './ParticipantList.vue';
 import GameOverData from '@/types/GameOverData';
 import GameOver from './GameOver.vue';
-import {checkHackersWin, checkAgentsWin, nodesSecuredCount} from '../utils';
+import { checkHackersWin, checkAgentsWin, nodesSecuredCount } from '../utils';
 
 export default defineComponent({
   props: {
@@ -46,6 +46,12 @@ export default defineComponent({
     PerformMaintenance(gameProgress: GameProgress) {
       this.participants = []
       this.$emit('performMaintenance', gameProgress)
+    },
+    ExitGame(){
+      this.$emit('gameOverActionPerformed', 'exit')
+    },
+    RetryGame(){
+      this.$emit('gameOverActionPerformed', 'retry')
     }
   },
   data() {
@@ -58,13 +64,13 @@ export default defineComponent({
     auditIndex() {
       return this.gameProgress === undefined ? 0 : this.gameProgress?.node - 1
     },
-    objective(){
+    objective() {
       const nodesLeftToSecure = 3 - (this.gameProgress && nodesSecuredCount(this.gameProgress) ? nodesSecuredCount(this.gameProgress) : 0);
       return `SECURE ${nodesLeftToSecure} NODES`;
     },
     finalGameData() {
       let hackersWin, agentsWin
-      if(this.gameProgress){
+      if (this.gameProgress) {
         hackersWin = checkHackersWin(this.gameProgress)
         agentsWin = checkAgentsWin(this.gameProgress)
       }
@@ -72,7 +78,7 @@ export default defineComponent({
       if (agentsWin) {
         return { hackersWin: false, message: "AGENTS WIN", participants: hackers } as GameOverData
       } else if (hackersWin) {
-        return { hackersWin: true, message: "HACKERS WIN", participants: hackers} as GameOverData
+        return { hackersWin: true, message: "HACKERS WIN", participants: hackers } as GameOverData
       } else {
         return {}
       }
@@ -89,11 +95,13 @@ export default defineComponent({
     <div id="playersDiv">
       <div>
         <MindnightPlayer v-for="player in gameSetup.players?.slice(0, 2)" :key="player.id" :player="player"
-          imagePosition="left" @changeProposition="ChangeProposition($event)" :isSelected="participants.includes(player)" />
+          imagePosition="left" @changeProposition="ChangeProposition($event)"
+          :isSelected="participants.includes(player)" />
       </div>
       <div class="middle">
         <MindnightPlayer v-for="player in gameSetup.players?.slice(2, 3)" :key="player.id" :player="player"
-          imagePosition="left" @changeProposition="ChangeProposition($event)" :isSelected="participants.includes(player)"/>
+          imagePosition="left" @changeProposition="ChangeProposition($event)"
+          :isSelected="participants.includes(player)" />
         <div v-if="maintenanceInProgress" class="info">NODE MAINTENANCE IN PROGRESS...
           <ParticipantList :participants="participantsArchive" />
         </div>
@@ -112,16 +120,22 @@ export default defineComponent({
           <TeamProposition v-if="finalGameData.message === undefined"
             :player="gameSetup.players?.find(p => p.playerConfig.playerName == playerName)" :participants="participants"
             :nodes="gameSetup?.nodes" :gameProgress="gameProgress" @performMaintenance="PerformMaintenance($event)" />
-          <GameOver v-else :finalGameData="finalGameData"/>
+          <GameOver v-else :finalGameData="finalGameData" />
         </div>
 
         <MindnightPlayer v-for="player in gameSetup.players?.slice(3, 4)" :key="player.id" :player="player"
-          imagePosition="left" @changeProposition="ChangeProposition($event)" :isSelected="participants.includes(player)"/>
+          imagePosition="left" @changeProposition="ChangeProposition($event)"
+          :isSelected="participants.includes(player)" />
       </div>
       <div>
         <MindnightPlayer v-for="player in gameSetup.players?.slice(4, 6)" :key="player.id" :player="player"
-          imagePosition="left" @changeProposition="ChangeProposition($event)" :isSelected="participants.includes(player)"/>
+          imagePosition="left" @changeProposition="ChangeProposition($event)"
+          :isSelected="participants.includes(player)" />
       </div>
+    </div>
+    <div v-if="finalGameData.message !== undefined">
+      <button class="mindnightButton" @click="ExitGame">Exit</button>
+      <button class="mindnightButton" @click="RetryGame">Retry</button>
     </div>
   </div>
 </template>
@@ -136,7 +150,7 @@ export default defineComponent({
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
-  margin-top:10%;
+  margin-top: 10%;
 }
 
 #playersDiv>div {
@@ -152,9 +166,7 @@ export default defineComponent({
   color: white;
 }
 
-.info{
-  color: white; 
+.info {
+  color: white;
   font-size: large;
-}
-
-</style>
+}</style>

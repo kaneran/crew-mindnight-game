@@ -3,7 +3,7 @@
     <div id="gameRoom" v-if="playerEnteredRoom">
       <PlayerBadge :player="gameSetup.players?.find(p => p.name === playerName)" />
       <PlayerRoom :gameSetup="gameSetup" :gameProgress="gameProgress" :maintenanceCompleted="maintenanceCompleted"
-        :maintenanceInProgress="maintenanceInProgress" @performMaintenance="PerformMaintenance($event)"
+        :maintenanceInProgress="maintenanceInProgress" @performMaintenance="PerformMaintenance($event)" @gameOverActionPerformed="HandleGameOverAction($event)"
         :playerName="playerName" />
       <GameNodes :gameSetup="gameSetup" :gameProgress="gameProgress" />
     </div>
@@ -46,7 +46,8 @@ export default defineComponent({
       playerName: "",
       gameProgress: { node: 1, audit: [] as Outcome[], participants: [] as Player[] } as GameProgress,
       maintenanceInProgress: false,
-      maintenanceCompleted: false
+      maintenanceCompleted: false,
+      inGameAudio: new Audio(require('../src/assets/sounds/ingametheme.mp3'))
     }
   },
   methods: {
@@ -75,15 +76,29 @@ export default defineComponent({
         }, 5000);
       });
     },
+    HandleGameOverAction(action: string){
+      this.inGameAudio.pause()
+      if(action === 'exit'){
+        this.playerName = ''
+        this.playerEnteredRoom = !this.playerEnteredRoom
+      } else if(action === 'retry'){
+        this.CreateGame()
+      }
+    },
     DisplayGameRoom() {
-      axios.get(`https://localhost:7240/Game?playerName=${this.playerName}`).then((response) => this.gameSetup = response.data)
+      this.CreateGame()
       this.playerEnteredRoom = !this.playerEnteredRoom
-      var inGameAudio = new Audio(require('../src/assets/sounds/ingametheme.mp3'))
-      inGameAudio.loop = true
-      inGameAudio.play()
     },
     OnInputChange($event: any) {
       this.playerName = $event.originalTarget.value
+    },
+    CreateGame(){
+      this.gameProgress = { node: 1, audit: [] as Outcome[], participants: [] as Player[] } as GameProgress
+      axios.get(`https://localhost:7240/Game?playerName=${this.playerName}`).then((response) => {
+        this.gameSetup = response.data
+      })
+      this.inGameAudio.loop = true
+      this.inGameAudio.play()
     }
   }
 })
@@ -129,6 +144,7 @@ export default defineComponent({
   padding: 10px 60px 10px 60px;
   font-family: "Mouse", Helvetica, Arial, sans-serif;
   font-size: x-large;
+  margin: 10px;
 }
 
 #enterName {
