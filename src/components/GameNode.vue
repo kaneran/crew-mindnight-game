@@ -37,11 +37,11 @@ export default defineComponent({
 </script>
 
 <template>
-  <div id="gameNode" :style="{backgroundColor: nodeColourMap[colour].backgroundColour}">
+  <div id="gameNode" :style="{backgroundColor: nodeColourMap[colour].backgroundColour, borderColor: nodeColourMap[colour].textColour}">
     <div style="text-align:center;">
       <div class="tooltip">
-        <p :style="{color:nodeColourMap[colour].textColour}">{{ gameSetup?.nodes[auditIndex]?.numberOfParticipantsRequired }}</p>
-        <p :style="{color:nodeColourMap[colour].textColour}">players</p>
+        <p :style="{color:nodeColourMap[colour].textColour, fontSize:'x-large', marginBottom: '0px'}">{{ gameSetup?.nodes[auditIndex]?.numberOfParticipantsRequired }}</p>
+        <p :style="{color:nodeColourMap[colour].textColour, marginTop: '5px'}">players</p>
         <span class="tooltiptext">
           <NodeInformation :outcome="gameProgress?.audit[auditIndex]" :gameSetup="gameSetup"/>
         </span>
@@ -81,8 +81,9 @@ export default defineComponent({
 
 #gameNode{
   border-radius: 100%;
-  padding: 50px 50px 50px 50px;
-  margin: 20px;
+  border-style: dotted;
+  padding: 15px 30px 15px 30px;
+  margin: 35px;
 }
 
 .test{

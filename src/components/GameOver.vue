@@ -22,7 +22,7 @@ export default defineComponent({
     <div id="gameOver">
             <p id="gameStatus" :class="finalGameData.hackersWin ? 'hacker' : 'agent'">{{ finalGameData?.message }} </p>
             <div id="hackers">
-              <p :style="{ fontSize: 'x-large' }">Hackers:&nbsp;</p>
+              <p :style="{ fontSize: 'x-large', color: 'white' }">Hackers:&nbsp;</p>
               <ParticipantList :participants="finalGameData.participants" />
             </div>
           </div>

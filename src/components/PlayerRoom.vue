@@ -136,6 +136,7 @@ export default defineComponent({
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
+  margin-top:10%;
 }
 
 #playersDiv>div {
